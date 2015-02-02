@@ -1,4 +1,5 @@
 ﻿using Spanglish.Misc;
+using Spanglish.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -12,6 +13,7 @@ namespace Spanglish.ViewModels
     {
         public RelayCommand LoginCmd { get; set; }
         public RelayCommand CreateNewAccountCmd { get; set; }
+        public RelayCommand SetCreateAccountViewCmd { get; set;}
 
         public string Name
         {
@@ -24,13 +26,23 @@ namespace Spanglish.ViewModels
         public LoginViewModel()
         {
             LoginCmd = new RelayCommand((p) => ExecuteLogin(p), (p) => CanLogin(p));
-           // CreateNewAccountCmd = new RelayCommand(CreateNewAccount, CanCreateNewAccount);
+            CreateNewAccountCmd = new RelayCommand((p) => CreateNewAccount(p));
+            SetCreateAccountViewCmd = new RelayCommand((p) => ViewModelManager.Instance.CurrentModel = new CreateAccountViewModel());
+        }
+
+        private object CreateNewAccount(object param)
+        {
+            throw new NotImplementedException();
         }
 
         private void ExecuteLogin(object param)
         {
-
-            Console.WriteLine(Password);
+            if (Authenticate(Login, Password))
+            {
+                Console.WriteLine("Authenticated");
+            }
+            else
+                Console.WriteLine("NOT:");
         }
 
         private bool CanLogin(object param)
@@ -40,7 +52,15 @@ namespace Spanglish.ViewModels
 
 
 
-        
+        private bool Authenticate(string login, string password)
+        {
+            bool auth = false;
+            using(var db = Database.Instance.GetConnection())
+            {
+                auth = db.Table<User>().Any(u => u.Login == login && u.Hash == password);
+            }
+            return auth;
+        }
 
     }
 }

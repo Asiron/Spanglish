@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SQLite;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -39,15 +38,18 @@ namespace Spanglish.Models
             if (File.Exists(filename))
                 return;
 
-            using(var database = new SQLite.Net.SQLiteConnection(new SQLitePlatformWin32(), filename))
+            using(var database = new SQLiteConnection(new SQLitePlatformWin32(), filename))
             {
                 database.CreateTable<User>();
                 database.CreateTable<Lesson>();
                 database.CreateTable<Word>();
-                //database.CreateTable<History>();
-
+                database.CreateTable<History>();
             }               
+        }
 
+        public SQLiteConnection GetConnection()
+        {
+            return new SQLiteConnection(new SQLitePlatformWin32(), Filename);
         }
     }
 }

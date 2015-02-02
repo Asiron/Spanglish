@@ -46,10 +46,5 @@ namespace Spanglish.Models
             get;
             set;
         }
-
-        public bool Authenticate(string login, string hash)
-        {
-            return Login == login && Hash == hash;
-        }
     }
 }
