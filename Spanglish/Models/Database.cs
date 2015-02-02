@@ -36,8 +36,12 @@ namespace Spanglish.Models
             using(var database = new SQLite.Net.SQLiteConnection(new SQLitePlatformWin32(), filename))
             {
                 database.CreateTable<User>();
-            }
-        }
+                database.CreateTable<Lesson>();
+                database.CreateTable<Word>();
+                //database.CreateTable<History>();
 
+            }               
+
+        }
     }
 }

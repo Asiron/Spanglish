@@ -6,6 +6,9 @@
 *.user
 *.sln.docstates
 
+*.sqlite
+!database/place.holder
+
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/

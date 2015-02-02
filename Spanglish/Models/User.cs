@@ -20,7 +20,7 @@ namespace Spanglish.Models
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
 
-        [Unique, MaxLength(20), NotNull]
+        [MaxLength(20)]
         public string Name
         {
             get { return _name; }

@@ -11,25 +11,25 @@ namespace Spanglish.Models
     public class Word
     {
 
-        int? _lessonId = null;
         string _firstLangDefinition = null;
         string _secondLangDefinition = null;
         string _imagePath = null;
         byte? _level = null;
+        int? _lessonId = null;
 
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
 
 
-        [MaxLength(80), NotNull]
-        public string DefinitionLang1
+        [MaxLength(80), NotNull, Indexed(Name = "Def", Order = 1, Unique = true)]
+        public string FirstLangDefinition
         {
             get { return _firstLangDefinition; }
             set { _firstLangDefinition = value; }
         }
 
-        [MaxLength(80), NotNull]
-        public string DefinitionLang2
+        [MaxLength(80), NotNull, Indexed(Name = "Def", Order = 2, Unique = true)]
+        public string SecondLangDefinition
         {
             get { return _secondLangDefinition; }
             set { _secondLangDefinition = value; }
@@ -49,8 +49,7 @@ namespace Spanglish.Models
             set { _lessonId = value; }
         }
 
-
-
+        [NotNull]
         public byte? Level
         {
             get

@@ -74,6 +74,8 @@
     <Compile Include="Misc\Constants.cs" />
     <Compile Include="Misc\RelayCommand.cs" />
     <Compile Include="Models\Database.cs" />
+    <Compile Include="Models\History.cs" />
+    <Compile Include="Models\Lesson.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\Word.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
