@@ -11,7 +11,7 @@ using SQLite.Net.Platform.Win32;
 
 namespace Spanglish.Models
 {
-    class Database
+    public class Database
     {
         private string _filename;
 
@@ -21,7 +21,7 @@ namespace Spanglish.Models
             {
                 return _filename;
             }
-            private set
+            set
             {
                 _filename = value;
             }
@@ -35,7 +35,7 @@ namespace Spanglish.Models
 
             using(var database = new SQLite.Net.SQLiteConnection(new SQLitePlatformWin32(), filename))
             {
-                database.createTable<User>();
+                database.CreateTable<User>();
             }
         }
 

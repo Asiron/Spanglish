@@ -12,5 +12,7 @@ namespace Spanglish.Misc
         public const int MinLoginLength = 4;
         public const int MinPasswordLength = 6;
         public const int MaxWordLevel = 10;
+        public const string ProductionDatabaseName = "spanglish_db.sqlite";
+        public const string TestDatabaseName = "test_db.sqlite";
     }
 }
