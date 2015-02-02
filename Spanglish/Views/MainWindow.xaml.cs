@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Spanglish
+namespace Spanglish.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
