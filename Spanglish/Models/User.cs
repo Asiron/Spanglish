@@ -12,10 +12,6 @@ namespace Spanglish.Models
     {
         string _name = null;
         string _login = null;
-        string _password = null;
-        /// <summary>
-        ///  TODO change password to hash
-        /// </summary>
 
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
@@ -44,16 +40,16 @@ namespace Spanglish.Models
             }
         }
 
-        [MaxLength(20), NotNull]
-        public string Password
+        [MaxLength(100), NotNull]
+        public string Hash
         {
-            get { return _password; }
-            set
-            {
-                if (value.Length < Constants.MinPasswordLength)
-                    throw new ArgumentException("ExceptionPasswordTooShort");
-                _password = value;
-            }
+            get;
+            set;
+        }
+
+        public bool Authenticate(string login, string hash)
+        {
+            return Login == login && Hash == hash;
         }
     }
 }

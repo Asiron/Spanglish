@@ -8,10 +8,11 @@ using System.Threading.Tasks;
 
 using SQLite.Net;
 using SQLite.Net.Platform.Win32;
+using Spanglish.Misc;
 
 namespace Spanglish.Models
 {
-    public class Database
+    public class Database : Singleton<Database>
     {
         private string _filename;
 
@@ -25,6 +26,11 @@ namespace Spanglish.Models
             {
                 _filename = value;
             }
+        }
+
+        public Database() : this(Constants.ProductionDatabaseName)
+        {
+             
         }
 
         public Database(string filename)

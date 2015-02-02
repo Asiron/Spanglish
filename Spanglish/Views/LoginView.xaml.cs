@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace Spanglish.Views
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for LoginView.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class LoginView : UserControl
     {
-        public MainWindow()
+        public LoginView()
         {
             InitializeComponent();
         }

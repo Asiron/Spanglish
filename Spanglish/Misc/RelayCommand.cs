@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace Spanglish.Helpers
+namespace Spanglish.Misc
 {
     public class RelayCommand : ICommand
     {
@@ -19,7 +19,7 @@ namespace Spanglish.Helpers
         public RelayCommand(Action<object> execute, Predicate<object> canExecute)
         {
             if (execute == null)
-                throw new ArgumentNullException("RelayCommand - execute");
+                throw new ArgumentNullException("Relay - execute");
 
             _executeAction = execute;
             _canExecuteAction = canExecute;

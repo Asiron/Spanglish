@@ -36,19 +36,10 @@ namespace SpanglishTests
             Database d = new Database(_pathToDatabase);
             using(var db = new SQLiteConnection(new SQLitePlatformWin32(), d.Filename))
             {                
-                try
-                {
-                    db.Insert(new User { Login = "asiron", Name = "Maciej Żurad", Password = "12345" });
-                    Assert.Fail("Exception with short password should appear");
-                }
-                catch (System.ArgumentException e)
-                {
-                    StringAssert.Contains(e.Message, "ExceptionPasswordTooShort");
-                }
 
                 try
                 {
-                    db.Insert(new User { Login = "aaa", Name = "Maciej Żurad", Password = "123456" });
+                    db.Insert(new User { Login = "aaa", Name = "Maciej Żurad", Hash = "123456" });
                     Assert.Fail("Exception with short login should appear");
                 }
                 catch (System.ArgumentException e)
@@ -56,12 +47,10 @@ namespace SpanglishTests
                     StringAssert.Contains(e.Message, "ExceptionLoginTooShort");
                 }
 
-
-
                 try
                 {
-                    db.Insert(new User { Login = "aaaaaa", Name = "BBB", Password = "123456" });
-                    Assert.Fail("Exception with short username should appear");
+                    db.Insert(new User { Login = "aaaaaa", Name = "BBB", Hash = "123456" });
+                    Assert.Fail("Exception with short name should appear");
                 }
                 catch (System.ArgumentException e)
                 {
@@ -69,11 +58,11 @@ namespace SpanglishTests
                 }
 
 
-                db.Insert(new User { Login = "aaaaaa", Name = "BBBBB", Password = "123456" });
+                db.Insert(new User { Login = "aaaaaa", Name = "BBBBB", Hash = "123456" });
                 try
                 {
-                    db.Insert(new User { Login = "aaaaaa", Name = "BBBBB", Password = "123456" });
-                    ///Assert.Fail("Exception with constraint violation should appear");
+                    db.Insert(new User { Login = "aaaaaa", Name = "BBBBB", Hash = "123456" });
+                    Assert.Fail("Exception with unique constraint violation should appear");
                 }
                 catch (SQLiteException e)
                 {
@@ -82,8 +71,8 @@ namespace SpanglishTests
 
                 try
                 {
-                    db.Insert(new User { Name = "BBBBB", Password = "123456" });
-                    Assert.Fail("Exception with constraint violation should appear");
+                    db.Insert(new User { Name = "BBBBB", Hash = "123456" });
+                    Assert.Fail("Exception with not null constraint violation should appear");
                 }
                 catch (SQLiteException e)
                 {
@@ -93,14 +82,14 @@ namespace SpanglishTests
                 try
                 {
                     db.Insert(new User { Name = "BBBBB", Login = "abcdef" });
-                    Assert.Fail("Exception with constraint violation should appear");
+                    Assert.Fail("Exception with not null constraint violation should appear");
                 }
                 catch (SQLiteException e)
                 {
                     StringAssert.Contains(e.Message, "NOT NULL");
                 }
 
-                Console.WriteLine("a");
+
             }
         }
 
@@ -206,7 +195,7 @@ namespace SpanglishTests
         {
             using (var database = new SQLite.Net.SQLiteConnection(new SQLitePlatformWin32(), _pathToDatabase))
             {
-                User u = new User() { Login = "maciek", Password = "1234567" };
+                User u = new User() { Login = "maciek", Hash = "1234567" };
                 Lesson l = new Lesson() { Name = "body parts"};
                 Word w = new Word()
                 {

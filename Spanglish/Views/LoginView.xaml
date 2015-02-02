@@ -1,0 +1,33 @@
+﻿<UserControl x:Class="Spanglish.Views.LoginView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Spanglish"
+             xmlns:misc="clr-namespace:Spanglish.Misc"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="2*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
+
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Text="Welcome to Spanglish" 
+                   FontWeight="Bold" FontSize="18"
+                   HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <StackPanel Grid.Row="1">
+            <Label Name="LabelEnterLogin" Content="Enter Login:" HorizontalAlignment="Center"></Label>
+            <TextBox Name="TbEnterLogin" HorizontalContentAlignment="Center" Text="{Binding Login, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+            <Label Name="LabelEnterPassword" Content="Enter Password:" HorizontalAlignment="Center"></Label>
+            <PasswordBox Name="TbEnterPassword" HorizontalContentAlignment="Center" misc:PasswordBoxAssistant.BindPassword="true" misc:PasswordBoxAssistant.BoundPassword="{Binding Path=Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></PasswordBox>
+            
+
+        </StackPanel>
+        <Button Grid.Row="2" Content="Log in" Command="{Binding LoginCmd}"></Button>
+        <Button Grid.Row="3" Content="Create new account"></Button>
+
+    </Grid>
+</UserControl>
