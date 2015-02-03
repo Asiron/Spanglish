@@ -15,6 +15,8 @@ namespace Spanglish.ViewModels
         public RelayCommand CreateNewAccountCmd { get; set; }
         public RelayCommand SetCreateAccountViewCmd { get; set;}
 
+
+
         public string Name
         {
             get { return "Login Screen"; }
@@ -50,14 +52,12 @@ namespace Spanglish.ViewModels
             return !String.IsNullOrWhiteSpace(Login) && !String.IsNullOrWhiteSpace(Password);
         }
 
-
-
         private bool Authenticate(string login, string password)
         {
             bool auth = false;
             using(var db = Database.Instance.GetConnection())
             {
-                auth = db.Table<User>().Any(u => u.Login == login && u.Hash == password);
+                auth = db.Table<User>().Count(u => u.Login == login && u.Hash == password) == 1;
             }
             return auth;
         }

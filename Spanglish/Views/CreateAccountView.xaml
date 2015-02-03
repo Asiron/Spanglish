@@ -7,26 +7,95 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
+        
         <Grid.RowDefinitions>
-            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="0.3*"></RowDefinition>
             <RowDefinition Height="2*"></RowDefinition>
-            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="0.45*"></RowDefinition>
 
         </Grid.RowDefinitions>
+        
         <TextBlock Grid.Row="0" Text="Create new account" 
                    FontWeight="Bold" FontSize="18"
                    HorizontalAlignment="Center" VerticalAlignment="Center" />
-        <StackPanel Grid.Row="1">
-            <Label Name="LabelEnterLogin" Content="Enter Login:" HorizontalAlignment="Center"></Label>
-            <TextBox Name="TbEnterLogin" HorizontalContentAlignment="Center" Text="{Binding NewLogin, UpdateSourceTrigger=PropertyChanged}"></TextBox>
-            <Label Name="LabelEnterPassword" Content="Enter Password:" HorizontalAlignment="Center"></Label>
-            <PasswordBox Name="TbEnterPassword" HorizontalContentAlignment="Center" misc:PasswordBoxAssistant.BindPassword="true" misc:PasswordBoxAssistant.BoundPassword="{Binding Path=NewPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></PasswordBox>
-            <Label Name="LabelEnterPasswordAgain" Content="Confirm Password:" HorizontalAlignment="Center"></Label>
-            <PasswordBox Name="TbEnterPasswordAgain" HorizontalContentAlignment="Center" misc:PasswordBoxAssistant.BindPassword="true" misc:PasswordBoxAssistant.BoundPassword="{Binding Path=NewPasswordConfirmation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></PasswordBox>
+        
+        <Grid Grid.Row="1" >      
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1.4*"></RowDefinition>
+                <RowDefinition Height="1*"></RowDefinition>
+                <RowDefinition Height="1*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0">
+                <Label Name="LabelEnterLogin" Content="Enter Login:" HorizontalAlignment="Center"></Label>
+                <TextBox Name="TbEnterLogin" HorizontalContentAlignment="Center" Text="{Binding NewLogin, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}">
+                    <Validation.ErrorTemplate>
+                        <ControlTemplate>
+                            <StackPanel>
+                                <AdornedElementPlaceholder x:Name="textBox"/>
+                                <ItemsControl ItemsSource="{Binding}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock HorizontalAlignment="Center" Text="{Binding ErrorContent}" Foreground="Red"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </ControlTemplate>
+                    </Validation.ErrorTemplate>
+                </TextBox>
+            </StackPanel>
+            <StackPanel Grid.Row="1">
+                <Label x:Name="LabelEnterPassword" Content="Enter Password:" HorizontalAlignment="Center" Margin="104,0"/>
+                <PasswordBox x:Name="TbEnterPassword" HorizontalContentAlignment="Center" misc:PasswordBoxAssistant.BindPassword="true" misc:PasswordBoxAssistant.BoundPassword="{Binding NewPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}">
+                    <Validation.ErrorTemplate>
+                        <ControlTemplate>
+                            <StackPanel>
+                                <AdornedElementPlaceholder x:Name="textBox"/>
+                                <ItemsControl ItemsSource="{Binding}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock HorizontalAlignment="Center" Text="{Binding ErrorContent}" Foreground="Red"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </ControlTemplate>
+                    </Validation.ErrorTemplate>
+                </PasswordBox>
+            </StackPanel>
+            <StackPanel Grid.Row="2">
+                <Label Name="LabelEnterPasswordAgain" Content="Confirm Password:" HorizontalAlignment="Center"></Label>
+                <PasswordBox Name="TbEnterPasswordAgain" HorizontalContentAlignment="Center" misc:PasswordBoxAssistant.BindPassword="true" misc:PasswordBoxAssistant.BoundPassword="{Binding Path=NewPasswordConfirmation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}">
+                    <Validation.ErrorTemplate>
+                        <ControlTemplate>
+                            <StackPanel>
+                                <AdornedElementPlaceholder x:Name="textBox"/>
+                                <ItemsControl ItemsSource="{Binding}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock HorizontalAlignment="Center" Text="{Binding ErrorContent}" Foreground="Red"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </ControlTemplate>
+                    </Validation.ErrorTemplate>
+                </PasswordBox>  
+            </StackPanel>
+          
 
+        </Grid >
+        <Grid Grid.Row="2" >
+            
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"></ColumnDefinition>
+                <ColumnDefinition Width="1*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            
+            <Button Grid.Column="0" Content="Create new account" Command="{Binding CreateNewAccountCmd}"></Button>
+            <Button Grid.Column="1" Content="Back" Command="{Binding RevertToPreviousViewModelCmd}"></Button>
 
-        </StackPanel>
-        <Button Grid.Row="2" Content="Create new account" Command="{Binding CreateNewAccountCmd}"></Button>
+        </Grid>
 
     </Grid>
 </UserControl>

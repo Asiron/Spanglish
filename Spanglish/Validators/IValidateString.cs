@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Spanglish.Misc
+namespace Spanglish.Models
 {
-    public interface IBaseViewModel
+    interface IValidateString
     {
-       string Name { get; }
+        ICollection<string> ValidateString(string str);
     }
 }

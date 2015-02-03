@@ -69,6 +69,9 @@
     <Compile Include="Misc\PasswordBoxAssistant.cs" />
     <Compile Include="Misc\Singleton.cs" />
     <Compile Include="Misc\ViewModelManger.cs" />
+    <Compile Include="Validators\IValidateString.cs" />
+    <Compile Include="Validators\ValidateNewLoginService.cs" />
+    <Compile Include="Validators\ValidateNewPasswordService.cs" />
     <Compile Include="ViewModels\ApplicationViewModel.cs" />
     <Compile Include="ViewModels\CreateAccountViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />

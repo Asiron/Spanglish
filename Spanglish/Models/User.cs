@@ -28,7 +28,7 @@ namespace Spanglish.Models
             }
         }
 
-        [Unique, MaxLength(20), NotNull]
+        [Unique, MaxLength(Constants.MaxLoginLength), NotNull]
         public string Login
         {
             get { return _login; }

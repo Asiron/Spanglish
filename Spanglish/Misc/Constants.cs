@@ -10,7 +10,9 @@ namespace Spanglish.Misc
     {
         public const int MinUsernameLength = 4;
         public const int MinLoginLength = 4;
+        public const int MaxLoginLength = 20;
         public const int MinPasswordLength = 6;
+        public const int MaxPasswordLength = 20;
         public const int MaxWordLevel = 10;
         public const int MinLessonNameLength = 2;
         public const string PathToRoot = "../../../";
