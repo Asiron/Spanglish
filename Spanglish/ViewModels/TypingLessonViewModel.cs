@@ -1,0 +1,20 @@
+﻿using Spanglish.Misc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Spanglish.ViewModels
+{
+    class TypingLessonViewModel : BaseViewModel
+    {
+        private string currentUser;
+
+        public TypingLessonViewModel(string currentUser)
+        {
+            // TODO: Complete member initialization
+            this.currentUser = currentUser;
+        }
+    }
+}

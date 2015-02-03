@@ -4,7 +4,7 @@
         xmlns:misc="clr-namespace:Spanglish.Misc"
         xmlns:v="clr-namespace:Spanglish.Views"
         xmlns:vm="clr-namespace:Spanglish.ViewModels"
-        Title="Spanglish" Height="350" Width="525">
+        Title="Spanglish" Height="600" Width="800">
 
     <Window.Resources>
         <DataTemplate DataType="{x:Type vm:LoginViewModel}">
@@ -15,6 +15,18 @@
         </DataTemplate>
         <DataTemplate DataType="{x:Type vm:CreateAccountViewModel}">
             <v:CreateAccountView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:CreateNewLessonsViewModel}">
+            <v:CreateNewLessonsView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:StatisticsViewModel}">
+            <v:StatisticsView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:TypingLessonViewModel}">
+            <v:TypingLessonView />
+        </DataTemplate>    
+        <DataTemplate DataType="{x:Type vm:SimpleLessonViewModel}">
+            <v:SimpleLessonView />
         </DataTemplate>
     </Window.Resources>
 

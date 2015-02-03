@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Spanglish.ViewModels
 {
-    class CreateAccountViewModel : BaseViewModel, IBaseViewModel
+    class CreateAccountViewModel : BaseViewModel
     {
         public string Name
         {

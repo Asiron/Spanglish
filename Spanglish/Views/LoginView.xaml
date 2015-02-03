@@ -6,12 +6,12 @@
              xmlns:local="clr-namespace:Spanglish"
              xmlns:misc="clr-namespace:Spanglish.Misc"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="600" d:DesignWidth="800">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="0.75*"></RowDefinition>
+            <RowDefinition Height="0.5*"></RowDefinition>
             <RowDefinition Height="2*"></RowDefinition>
-            <RowDefinition Height="0.50*"></RowDefinition>
+            <RowDefinition Height="0.5*"></RowDefinition>
 
         </Grid.RowDefinitions>
         <TextBlock Grid.Row="0" Text="Welcome to Spanglish" 
@@ -19,10 +19,10 @@
                    HorizontalAlignment="Center" VerticalAlignment="Center" />
         <Border Validation.ValidationAdornerSiteFor="{Binding CorrectCredentials}" Margin="3" Grid.Row="1" Background="GhostWhite" BorderBrush="Gainsboro" BorderThickness="1">
             <StackPanel >
-                <Label Margin="7" Name="LabelEnterLogin" Content="Enter Login:" HorizontalAlignment="Center"></Label>
-                <TextBox Margin="7" Name="TbEnterLogin" HorizontalContentAlignment="Center" Text="{Binding Login, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"></TextBox>
-                <Label Margin="7" Name="LabelEnterPassword" Content="Enter Password:" HorizontalAlignment="Center"></Label>
-                <PasswordBox Margin="7" Name="TbEnterPassword" HorizontalContentAlignment="Center" misc:PasswordBoxAssistant.BindPassword="true" misc:PasswordBoxAssistant.BoundPassword="{Binding Path=Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></PasswordBox>
+                <Label Margin="10" Name="LabelEnterLogin" Content="Enter Login:" HorizontalAlignment="Center"></Label>
+                <TextBox Margin="10" Name="TbEnterLogin" HorizontalContentAlignment="Center" Text="{Binding Login, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"></TextBox>
+                <Label Margin="10" Name="LabelEnterPassword" Content="Enter Password:" HorizontalAlignment="Center"></Label>
+                <PasswordBox Margin="10" Name="TbEnterPassword" HorizontalContentAlignment="Center" misc:PasswordBoxAssistant.BindPassword="true" misc:PasswordBoxAssistant.BoundPassword="{Binding Path=Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></PasswordBox>
             </StackPanel>
         </Border>
 

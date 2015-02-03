@@ -9,16 +9,12 @@ using System.Threading.Tasks;
 
 namespace Spanglish.ViewModels
 {
-    class LoginViewModel : BaseViewModel, IBaseViewModel
+    class LoginViewModel : BaseViewModel
     {
         public RelayCommand LoginCmd { get; set; }
         public RelayCommand CreateNewAccountCmd { get; set; }
         public RelayCommand SetCreateAccountViewCmd { get; set;}
 
-        public string Name
-        {
-            get { return "Login Screen"; }
-        }
 
         private string _login;
         private string _password;
@@ -83,7 +79,7 @@ namespace Spanglish.ViewModels
 
         private void ExecuteLogin(object param)
         {
-            ViewModelManager.Instance.CurrentModel = new MainMenuViewModel();
+            ViewModelManager.Instance.CurrentModel = new MainMenuViewModel(Login);
         }
 
         private bool CanLogin(object param)

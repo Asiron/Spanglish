@@ -4,10 +4,36 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="600" d:DesignWidth="800">
     <Grid>
-        <TextBlock Text="This is the Main Menu" 
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.6*"></RowDefinition>
+            <RowDefinition Height="0.6*"></RowDefinition>
+            <RowDefinition Height="5*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Text="Spanglish" 
                    FontWeight="Bold" FontSize="18"
                    HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <TextBlock Grid.Row="1" Text="{Binding CurrentUser}" 
+                   FontWeight="Bold" FontSize="18"
+                   HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <Border Margin="10" Grid.Row="2" Background="GhostWhite" BorderBrush="Gainsboro" BorderThickness="1">
+            <Grid >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"></RowDefinition>
+                    <RowDefinition Height="1*"></RowDefinition>
+                    <RowDefinition Height="1*"></RowDefinition>
+                    <RowDefinition Height="1*"></RowDefinition>
+                    <RowDefinition Height="1*"></RowDefinition>
+
+                </Grid.RowDefinitions>
+                <Button Margin="10" Grid.Row="0" Command="{Binding SetCreateNewLessonsViewCmd}" Content="Create new lessons"/>
+                <Button Margin="10" Grid.Row="1" Command="{Binding SetSimpleLessonViewCmd}" Content="Lesson - choose"/>
+                <Button Margin="10" Grid.Row="2" Command="{Binding SetTypingLessonViewCmd}" Content="Lesson - typying"/>
+                <Button Margin="10" Grid.Row="3" Command="{Binding SetStatisticsViewCmd}" Content="Statistics"/>
+                <Button Margin="10" Grid.Row="4" Command="{Binding RevertToPreviousViewModelCmd}" Content="Log out"/>
+
+            </Grid>
+        </Border>
     </Grid>
 </UserControl>

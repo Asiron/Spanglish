@@ -5,28 +5,28 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:misc="clr-namespace:Spanglish.Misc"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="600" d:DesignWidth="800">
     <Grid>
         
         <Grid.RowDefinitions>
-            <RowDefinition Height="0.3*"></RowDefinition>
+            <RowDefinition Height="0.5*"></RowDefinition>
             <RowDefinition Height="2*"></RowDefinition>
-            <RowDefinition Height="0.45*"></RowDefinition>
+            <RowDefinition Height="0.5*"></RowDefinition>
 
         </Grid.RowDefinitions>
         
         <TextBlock Grid.Row="0" Text="Create new account" 
                    FontWeight="Bold" FontSize="18"
                    HorizontalAlignment="Center" VerticalAlignment="Center" />
-        <Border Margin="3" Grid.Row="1" Background="GhostWhite" BorderBrush="Gainsboro" BorderThickness="1">
+        <Border Margin="3" Grid.Row="1" Background="GhostWhite" BorderBrush="Gainsboro" BorderThickness="1" >
 
             <Grid Grid.Row="1" >      
             <Grid.RowDefinitions>
-                <RowDefinition Height="1.25*"></RowDefinition>
                 <RowDefinition Height="1*"></RowDefinition>
-                <RowDefinition Height="1.1*"></RowDefinition>
+                <RowDefinition Height="1*"></RowDefinition>
+                <RowDefinition Height="1*"></RowDefinition>
             </Grid.RowDefinitions>
-            <StackPanel Grid.Row="0" Margin="4">
+            <StackPanel Grid.Row="0" Margin="10">
                 <Label Name="LabelEnterLogin" Content="Enter Login:" HorizontalAlignment="Center"></Label>
                 <TextBox Name="TbEnterLogin" HorizontalContentAlignment="Center" Text="{Binding NewLogin, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}">
                     <Validation.ErrorTemplate>
@@ -45,7 +45,7 @@
                     </Validation.ErrorTemplate>
                 </TextBox>
             </StackPanel>
-            <StackPanel Grid.Row="1" Margin="4">
+            <StackPanel Grid.Row="1" Margin="10">
                 <Label x:Name="LabelEnterPassword" Content="Enter Password:" HorizontalAlignment="Center" Margin="104,0"/>
                 <PasswordBox x:Name="TbEnterPassword" HorizontalContentAlignment="Center" misc:PasswordBoxAssistant.BindPassword="true" misc:PasswordBoxAssistant.BoundPassword="{Binding NewPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}">
                     <Validation.ErrorTemplate>
@@ -64,7 +64,7 @@
                     </Validation.ErrorTemplate>
                 </PasswordBox>
             </StackPanel>
-            <StackPanel Grid.Row="2" Margin="4">
+            <StackPanel Grid.Row="2" Margin="10">
                 <Label Name="LabelEnterPasswordAgain" Content="Confirm Password:" HorizontalAlignment="Center"></Label>
                 <PasswordBox Name="TbEnterPasswordAgain" HorizontalContentAlignment="Center" misc:PasswordBoxAssistant.BindPassword="true" misc:PasswordBoxAssistant.BoundPassword="{Binding Path=NewPasswordConfirmation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}">
                     <Validation.ErrorTemplate>
