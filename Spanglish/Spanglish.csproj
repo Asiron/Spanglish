@@ -105,7 +105,7 @@
     <Compile Include="Models\Lesson.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\Word.cs" />
-    <Compile Include="Misc\ObservableObject.cs" />
+    <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="Views\LoginView.xaml.cs">
       <DependentUpon>LoginView.xaml</DependentUpon>
     </Compile>

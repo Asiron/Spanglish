@@ -9,47 +9,86 @@ using System.Threading.Tasks;
 
 namespace Spanglish.ViewModels
 {
-    class LoginViewModel : ObservableObject, IBaseViewModel
+    class LoginViewModel : BaseViewModel, IBaseViewModel
     {
         public RelayCommand LoginCmd { get; set; }
         public RelayCommand CreateNewAccountCmd { get; set; }
         public RelayCommand SetCreateAccountViewCmd { get; set;}
-
-
 
         public string Name
         {
             get { return "Login Screen"; }
         }
 
-        public string Login { get; set; }
-        public string Password { get; set; }
+        private string _login;
+        private string _password;
+
+        public string CorrectCredentials
+        {
+            get;
+            set;
+        }
+        public string Login
+        {
+            get { return _login; }
+            set
+            {
+                _login = value;
+                ValidateProperty("CorrectCredentials", _login, _validateLoginService);
+
+            }
+        }
+        public string Password
+        {
+            get { return _password; }
+            set
+            {
+                _password = value;
+                ValidateProperty("CorrectCredentials", _password, _validatePasswordService);
+            }
+        }
+
+        private ValidationPredicate _validateLoginService;
+        private ValidationPredicate _validatePasswordService;
 
         public LoginViewModel()
         {
             LoginCmd = new RelayCommand((p) => ExecuteLogin(p), (p) => CanLogin(p));
-            CreateNewAccountCmd = new RelayCommand((p) => CreateNewAccount(p));
             SetCreateAccountViewCmd = new RelayCommand((p) => ViewModelManager.Instance.CurrentModel = new CreateAccountViewModel());
-        }
+            _validateLoginService = (p) => {
+                var ret = new List<string>();
+                using (var db = Database.Instance.GetConnection())
+                {
+                    if (db.Table<User>().Count(u => (u.Login.Equals(p) && u.Hash.Equals(Password))) == 0)
+                    {
+                        ret.Add("Login or password is not correct");
+                    }
+                }
+                return ret;
+            };
 
-        private object CreateNewAccount(object param)
-        {
-            throw new NotImplementedException();
+            _validatePasswordService = (p) =>
+            {
+                var ret = new List<string>();
+                using (var db = Database.Instance.GetConnection())
+                {
+                    if (db.Table<User>().Count(u => (u.Login.Equals(Login) && u.Hash.Equals(p))) == 0)
+                    {
+                        ret.Add("Login or password is not correct");
+                    }
+                }
+                return ret;
+            };
         }
 
         private void ExecuteLogin(object param)
         {
-            if (Authenticate(Login, Password))
-            {
-                Console.WriteLine("Authenticated");
-            }
-            else
-                Console.WriteLine("NOT:");
+            ViewModelManager.Instance.CurrentModel = new MainMenuViewModel();
         }
 
         private bool CanLogin(object param)
         {
-            return !String.IsNullOrWhiteSpace(Login) && !String.IsNullOrWhiteSpace(Password);
+            return !String.IsNullOrWhiteSpace(Login) && !String.IsNullOrWhiteSpace(Password) && !HasErrors;
         }
 
         private bool Authenticate(string login, string password)

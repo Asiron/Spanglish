@@ -7,13 +7,11 @@ using System.Threading.Tasks;
 
 namespace Spanglish.ViewModels
 {
-    class MainMenuViewModel : ObservableObject, IBaseViewModel
+    class MainMenuViewModel : BaseViewModel, IBaseViewModel
     {
-        public ApplicationViewModel Parent { set; get; }
-
-        public MainMenuViewModel(ApplicationViewModel parent)
+        public MainMenuViewModel()
         {
-            Parent = parent;
+
         }
 
         public string Name

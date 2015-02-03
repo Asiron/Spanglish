@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Spanglish.ViewModels
 {
-    class CreateAccountViewModel : ObservableObject, IBaseViewModel, INotifyDataErrorInfo
+    class CreateAccountViewModel : BaseViewModel, IBaseViewModel
     {
         public string Name
         {
@@ -19,7 +19,6 @@ namespace Spanglish.ViewModels
 
         private readonly IValidateString _loginValidatorService;
         private readonly IValidateString _passwordValidatorService;
-        private readonly Dictionary<string, ICollection<string>> _validationErrors;
 
         private string _newLogin;
         private string _newPassword;
@@ -68,7 +67,6 @@ namespace Spanglish.ViewModels
             RevertToPreviousViewModelCmd = new RelayCommand((p) => ViewModelManager.Instance.ReturnToPreviousModel());
             _loginValidatorService = new ValidateNewLoginService();
             _passwordValidatorService = new ValidateNewPasswordService();
-            _validationErrors = new Dictionary<string, ICollection<string>>();
 
         }
 
@@ -78,61 +76,16 @@ namespace Spanglish.ViewModels
             {
                 db.Insert(new User() { Login = NewLogin, Hash = NewPassword });
             }
-
+            ViewModelManager.Instance.ReturnToPreviousModel();
         }
 
         private bool CanExecuteCreateNewAccount(object param)
         {
-            bool _nl = !String.IsNullOrWhiteSpace(NewLogin);
-            bool _np = !String.IsNullOrWhiteSpace(NewPassword);
-            bool _npc = !String.IsNullOrWhiteSpace(NewPasswordConfirmation);
-            bool _same = NewPasswordConfirmation == NewPassword;
-            bool _err = !HasErrors;
-            Console.WriteLine(String.Format("nl {0} np {1} npc {2} same {3} err {4}", _nl, _np, _npc, _same, _err));
             return !String.IsNullOrWhiteSpace(NewLogin) &&
                 !String.IsNullOrWhiteSpace(NewPassword) &&
-                !String.IsNullOrWhiteSpace(NewPasswordConfirmation) &&
-                NewPasswordConfirmation == NewPassword && !HasErrors;
+                !String.IsNullOrWhiteSpace(NewPasswordConfirmation) 
+                 && !HasErrors;
         }
 
-        delegate ICollection<string> ValidationPredicate(object value);
-
-        private void ValidateProperty(string propertyName, object value, ValidationPredicate predicate)
-        {
-            ICollection<string> validationErrors = predicate(value);
-            bool isValid = validationErrors != null && validationErrors.Count() == 0;
-            Console.WriteLine(isValid);
-            if (!isValid)
-            {
-                _validationErrors[propertyName] = validationErrors;
-                RaiseErrorsChanged(propertyName);
-            }
-            else if (_validationErrors.ContainsKey(propertyName))
-            {
-                _validationErrors.Remove(propertyName);
-                RaiseErrorsChanged(propertyName);
-            }
-        }
-
-        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
-        private void RaiseErrorsChanged(string propertyName)
-        {
-            if (ErrorsChanged != null)
-                ErrorsChanged(this, new DataErrorsChangedEventArgs(propertyName));
-        }
-
-        public IEnumerable GetErrors(string propertyName)
-        {
-            if (string.IsNullOrEmpty(propertyName)
-            || !_validationErrors.ContainsKey(propertyName))
-                return null;
-
-            return _validationErrors[propertyName];
-        }
-
-        public bool HasErrors
-        {
-            get { return _validationErrors.Count > 0; }
-        }
     }
 }
