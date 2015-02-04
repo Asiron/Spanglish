@@ -41,7 +41,7 @@ namespace Spanglish.Models
         }
 
         [MaxLength(100), NotNull]
-        public string Hash
+        public string Password
         {
             get;
             set;

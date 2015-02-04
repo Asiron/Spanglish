@@ -1,4 +1,5 @@
 ﻿using Spanglish.Misc;
+using Spanglish.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,12 +10,12 @@ namespace Spanglish.ViewModels
 {
     class StatisticsViewModel : BaseViewModel
     {
-        private string currentUser;
+        public User CurrentUser { get; private set; }
 
-        public StatisticsViewModel(string currentUser)
+        public StatisticsViewModel(User currentUser)
         {
             // TODO: Complete member initialization
-            this.currentUser = currentUser;
+            CurrentUser = currentUser;
         }
     }
 }

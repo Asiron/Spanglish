@@ -89,7 +89,7 @@ namespace Spanglish.ViewModels
         {
             using(var db = Database.Instance.GetConnection())
             {
-                db.Insert(new User() { Login = NewLogin, Hash = NewPassword, Name = NewName});
+                db.Insert(new User() { Login = NewLogin, Password = NewPassword, Name = NewName});
             }
             ViewModelManager.Instance.ReturnToPreviousModel();
         }

@@ -75,6 +75,7 @@
     <Compile Include="ViewModels\ApplicationViewModel.cs" />
     <Compile Include="ViewModels\CreateAccountViewModel.cs" />
     <Compile Include="ViewModels\CreateNewLessonsViewModel.cs" />
+    <Compile Include="Misc\ObservableObject.cs" />
     <Compile Include="ViewModels\SimpleLessonViewModel.cs" />
     <Compile Include="ViewModels\StatisticsViewModel.cs" />
     <Compile Include="ViewModels\TypingLessonViewModel.cs" />

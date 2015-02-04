@@ -14,7 +14,7 @@
         <TextBlock Grid.Row="0" Text="Spanglish" 
                    FontWeight="Bold" FontSize="18"
                    HorizontalAlignment="Center" VerticalAlignment="Center" />
-        <TextBlock Grid.Row="1" Text="{Binding CurrentUser}" 
+        <TextBlock Grid.Row="1" Text="{Binding UserWelcomeText}" 
                    FontWeight="Bold" FontSize="18"
                    HorizontalAlignment="Center" VerticalAlignment="Center" />
         <Border Margin="10" Grid.Row="2" Background="GhostWhite" BorderBrush="Gainsboro" BorderThickness="1">

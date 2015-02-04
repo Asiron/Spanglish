@@ -1,4 +1,5 @@
 ﻿using Spanglish.Misc;
+using Spanglish.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,26 +10,21 @@ namespace Spanglish.ViewModels
 {
     class MainMenuViewModel : BaseViewModel
     {
-        private string _currentUser;
+        public User CurrentUser { get; private set; }
+        public string UserWelcomeText
+        {
+            get { return "Welcome " + CurrentUser.Name; }
+        }
 
-        public RelayCommand RevertToPreviousViewModelCmd { set; get; }
+        public RelayCommand RevertToPreviousViewModelCmd { get; set; }
         public RelayCommand SetCreateNewLessonsViewCmd { set; get; }
         public RelayCommand SetSimpleLessonViewCmd { set; get; }
         public RelayCommand SetTypingLessonViewCmd { set; get; }
-        public RelayCommand SetStatisticsViewCmd { set; get; }    
+        public RelayCommand SetStatisticsViewCmd { set; get; }
 
-        public string CurrentUser
+        public MainMenuViewModel(User currentUser)
         {
-            get { return "Welcome " + _currentUser; }
-            set
-            {
-                _currentUser = value;
-            }
-        }
-
-        public MainMenuViewModel(string currentUser)
-        {
-            _currentUser = currentUser;
+            CurrentUser = currentUser;
             RevertToPreviousViewModelCmd = new RelayCommand((p) => ViewModelManager.Instance.ReturnToPreviousModel());
             SetCreateNewLessonsViewCmd = new RelayCommand((p) => ViewModelManager.Instance.CurrentModel = new CreateNewLessonsViewModel(currentUser));
             SetSimpleLessonViewCmd = new RelayCommand((p) => ViewModelManager.Instance.CurrentModel = new SimpleLessonViewModel(currentUser));

@@ -5,14 +5,14 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Spanglish.ViewModels;
 
 namespace Spanglish.Misc
 {
-    public abstract class BaseViewModel : INotifyPropertyChanged, INotifyDataErrorInfo
+    public abstract class BaseViewModel : ObservableObject, INotifyDataErrorInfo
     {
 
         private readonly Dictionary<string, ICollection<string>> _validationErrors = new Dictionary<string,ICollection<string>>();
-
 
         public delegate ICollection<string> ValidationPredicate(object value);
 
@@ -51,24 +51,6 @@ namespace Spanglish.Misc
         public bool HasErrors
         {
             get { return _validationErrors.Count > 0; }
-        }
-
-        public virtual void RaisePropertyChanged(string propertyName)
-        {
-            OnPropertyChanged(propertyName);
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-
-            PropertyChangedEventHandler handler = this.PropertyChanged;
-            if (handler != null)
-            {
-                var e = new PropertyChangedEventArgs(propertyName);
-                handler(this, e);
-            }
         }
     }
 }

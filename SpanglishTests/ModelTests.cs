@@ -39,7 +39,7 @@ namespace SpanglishTests
 
                 try
                 {
-                    db.Insert(new User { Login = "aaa", Name = "Maciej Żurad", Hash = "123456" });
+                    db.Insert(new User { Login = "aaa", Name = "Maciej Żurad", Password = "123456" });
                     Assert.Fail("Exception with short login should appear");
                 }
                 catch (System.ArgumentException e)
@@ -49,7 +49,7 @@ namespace SpanglishTests
 
                 try
                 {
-                    db.Insert(new User { Login = "aaaaaa", Name = "BBB", Hash = "123456" });
+                    db.Insert(new User { Login = "aaaaaa", Name = "BBB", Password = "123456" });
                     Assert.Fail("Exception with short name should appear");
                 }
                 catch (System.ArgumentException e)
@@ -58,10 +58,10 @@ namespace SpanglishTests
                 }
 
 
-                db.Insert(new User { Login = "aaaaaa", Name = "BBBBB", Hash = "123456" });
+                db.Insert(new User { Login = "aaaaaa", Name = "BBBBB", Password = "123456" });
                 try
                 {
-                    db.Insert(new User { Login = "aaaaaa", Name = "BBBBB", Hash = "123456" });
+                    db.Insert(new User { Login = "aaaaaa", Name = "BBBBB", Password = "123456" });
                     Assert.Fail("Exception with unique constraint violation should appear");
                 }
                 catch (SQLiteException e)
@@ -71,7 +71,7 @@ namespace SpanglishTests
 
                 try
                 {
-                    db.Insert(new User { Name = "BBBBB", Hash = "123456" });
+                    db.Insert(new User { Name = "BBBBB", Password = "123456" });
                     Assert.Fail("Exception with not null constraint violation should appear");
                 }
                 catch (SQLiteException e)
@@ -205,7 +205,7 @@ namespace SpanglishTests
         {
             using (var database = new SQLite.Net.SQLiteConnection(new SQLitePlatformWin32(), _pathToDatabase))
             {
-                User u = new User() { Login = "maciek", Hash = "1234567" };
+                User u = new User() { Login = "maciek", Password = "1234567" };
                 Lesson l = new Lesson() { Name = "body parts"};
                 Word w = new Word()
                 {

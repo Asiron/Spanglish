@@ -6,12 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Spanglish.Models
+namespace Spanglish.Models 
 {
-    public class Lesson
+    public class Lesson : ObservableObject
     {
         string _name = null;
-        int? _userId = null;
 
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }

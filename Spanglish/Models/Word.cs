@@ -1,14 +1,16 @@
 ﻿using Spanglish.Misc;
+using Spanglish.ViewModels;
 using SQLite.Net.Attributes;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Spanglish.Models
 {
-    public class Word
+    public class Word : ObservableObject
     {
 
         string _firstLangDefinition = null;
@@ -25,14 +27,14 @@ namespace Spanglish.Models
         public string FirstLangDefinition
         {
             get { return _firstLangDefinition; }
-            set { _firstLangDefinition = value; }
+            set { _firstLangDefinition = value; OnPropertyChanged("FirstLangDefinition"); }
         }
 
         [MaxLength(80), NotNull, Indexed(Name = "Def", Order = 2, Unique = true)]
         public string SecondLangDefinition
         {
             get { return _secondLangDefinition; }
-            set { _secondLangDefinition = value; }
+            set { _secondLangDefinition = value; OnPropertyChanged("SecondLangDefinition"); }
         }
 
         [MaxLength(80)]
@@ -71,6 +73,5 @@ namespace Spanglish.Models
                 return !String.IsNullOrWhiteSpace(_imagePath);
             }
         }
-
     }
 }

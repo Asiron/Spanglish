@@ -19,11 +19,8 @@ namespace Spanglish.ViewModels
         private string _login;
         private string _password;
 
-        public string CorrectCredentials
-        {
-            get;
-            set;
-        }
+        public string CorrectCredentials {set; get;}
+
         public string Login
         {
             get { return _login; }
@@ -55,7 +52,7 @@ namespace Spanglish.ViewModels
                 var ret = new List<string>();
                 using (var db = Database.Instance.GetConnection())
                 {
-                    if (db.Table<User>().Count(u => (u.Login.Equals(p) && u.Hash.Equals(Password))) == 0)
+                    if (db.Table<User>().Count(u => (u.Login.Equals(p) && u.Password.Equals(Password))) == 0)
                     {
                         ret.Add("Login or password is not correct");
                     }
@@ -68,7 +65,7 @@ namespace Spanglish.ViewModels
                 var ret = new List<string>();
                 using (var db = Database.Instance.GetConnection())
                 {
-                    if (db.Table<User>().Count(u => (u.Login.Equals(Login) && u.Hash.Equals(p))) == 0)
+                    if (db.Table<User>().Count(u => (u.Login.Equals(Login) && u.Password.Equals(p))) == 0)
                     {
                         ret.Add("Login or password is not correct");
                     }
@@ -79,7 +76,8 @@ namespace Spanglish.ViewModels
 
         private void ExecuteLogin(object param)
         {
-            ViewModelManager.Instance.CurrentModel = new MainMenuViewModel(Login);
+            User authUser = GetAuthenticatedUser(Login, Password);
+            ViewModelManager.Instance.CurrentModel = new MainMenuViewModel(authUser);
         }
 
         private bool CanLogin(object param)
@@ -87,14 +85,14 @@ namespace Spanglish.ViewModels
             return !String.IsNullOrWhiteSpace(Login) && !String.IsNullOrWhiteSpace(Password) && !HasErrors;
         }
 
-        private bool Authenticate(string login, string password)
+        private User GetAuthenticatedUser(string login, string password)
         {
-            bool auth = false;
+            User authUser = null;
             using(var db = Database.Instance.GetConnection())
             {
-                auth = db.Table<User>().Count(u => u.Login == login && u.Hash == password) == 1;
+                authUser = db.Table<User>().Where(u => u.Login.Equals(login) && u.Password.Equals(password)).First();
             }
-            return auth;
+            return authUser; 
         }
 
     }
