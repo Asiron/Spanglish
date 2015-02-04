@@ -11,7 +11,7 @@ namespace Spanglish.Misc
 {
     public abstract class BaseViewModel : ObservableObject, INotifyDataErrorInfo
     {
-
+        
         private readonly Dictionary<string, ICollection<string>> _validationErrors = new Dictionary<string,ICollection<string>>();
 
         public delegate ICollection<string> ValidationPredicate(object value);
