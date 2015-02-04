@@ -17,7 +17,7 @@ namespace Spanglish.ViewModels
         public RelayCommand SetTypingLessonViewCmd { set; get; }
         public RelayCommand SetStatisticsViewCmd { set; get; }    
 
-        public String CurrentUser
+        public string CurrentUser
         {
             get { return "Welcome " + _currentUser; }
             set

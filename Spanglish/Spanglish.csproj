@@ -78,6 +78,7 @@
     <Compile Include="ViewModels\SimpleLessonViewModel.cs" />
     <Compile Include="ViewModels\StatisticsViewModel.cs" />
     <Compile Include="ViewModels\TypingLessonViewModel.cs" />
+    <Compile Include="Validators\ValidateNewNameService.cs" />
     <Compile Include="Views\CreateNewLessonsView.xaml.cs">
       <DependentUpon>CreateNewLessonsView.xaml</DependentUpon>
     </Compile>

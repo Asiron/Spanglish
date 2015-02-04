@@ -11,9 +11,13 @@ namespace Spanglish.Models
     public class Lesson
     {
         string _name = null;
+        int? _userId = null;
 
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
+
+        [NotNull]
+        public int? UserId { set; get; }
 
         [NotNull, Unique, MaxLength(20)]
         public string Name

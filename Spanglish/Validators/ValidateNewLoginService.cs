@@ -1,4 +1,5 @@
 ﻿using Spanglish.Misc;
+using Spanglish.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace Spanglish.Models
+namespace Spanglish.Validators
 {
     public class ValidateNewLoginService : IValidateString
     {

@@ -9,6 +9,7 @@ namespace Spanglish.Misc
     public static class Constants
     {
         public const int MinUsernameLength = 4;
+        public const int MaxUsernameLength = 20;
         public const int MinLoginLength = 4;
         public const int MaxLoginLength = 20;
         public const int MinPasswordLength = 6;
@@ -20,5 +21,6 @@ namespace Spanglish.Misc
         public const string ImageFolder = "database/images";
         public const string ProductionDatabaseName = "spanglish_db.sqlite";
         public const string TestDatabaseName = "test_db.sqlite";
+        public const string ProductionDatabasePath = Constants.PathToRoot + Constants.DatabaseFileFolder + "/" + Constants.ProductionDatabaseName;
     }
 }

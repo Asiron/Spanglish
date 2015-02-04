@@ -1,5 +1,6 @@
 ﻿using Spanglish.Misc;
 using Spanglish.Models;
+using Spanglish.Validators;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -19,8 +20,11 @@ namespace Spanglish.ViewModels
 
         private readonly IValidateString _loginValidatorService;
         private readonly IValidateString _passwordValidatorService;
+        private readonly IValidateString _nameValidatorService;
+
 
         private string _newLogin;
+        private string _newName;
         private string _newPassword;
         private string _newPasswordConfirmation;
 
@@ -31,6 +35,16 @@ namespace Spanglish.ViewModels
             {
                 _newLogin = value;
                 ValidateProperty("NewLogin", _newLogin, (p) => _loginValidatorService.ValidateString(p.ToString()));
+            }
+        }
+
+        public string NewName
+        {
+            get { return _newName; }
+            set
+            {
+                _newName = value;
+                ValidateProperty("NewName", _newName, (p) => _nameValidatorService.ValidateString(p.ToString()));
             }
         }
 
@@ -66,6 +80,7 @@ namespace Spanglish.ViewModels
             CreateNewAccountCmd = new RelayCommand((p) => ExecuteCreateNewAccount(p), (p) => CanExecuteCreateNewAccount(p));
             RevertToPreviousViewModelCmd = new RelayCommand((p) => ViewModelManager.Instance.ReturnToPreviousModel());
             _loginValidatorService = new ValidateNewLoginService();
+            _nameValidatorService = new ValidateNewNameService();
             _passwordValidatorService = new ValidateNewPasswordService();
 
         }
@@ -74,7 +89,7 @@ namespace Spanglish.ViewModels
         {
             using(var db = Database.Instance.GetConnection())
             {
-                db.Insert(new User() { Login = NewLogin, Hash = NewPassword });
+                db.Insert(new User() { Login = NewLogin, Hash = NewPassword, Name = NewName});
             }
             ViewModelManager.Instance.ReturnToPreviousModel();
         }
@@ -83,9 +98,8 @@ namespace Spanglish.ViewModels
         {
             return !String.IsNullOrWhiteSpace(NewLogin) &&
                 !String.IsNullOrWhiteSpace(NewPassword) &&
-                !String.IsNullOrWhiteSpace(NewPasswordConfirmation) 
-                 && !HasErrors;
+                !String.IsNullOrWhiteSpace(NewPasswordConfirmation) &&
+                !String.IsNullOrWhiteSpace(NewName) && !HasErrors;
         }
-
     }
 }

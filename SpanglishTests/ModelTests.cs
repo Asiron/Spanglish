@@ -99,14 +99,24 @@ namespace SpanglishTests
             Database d = new Database(_pathToDatabase);
             using (var db = new SQLiteConnection(new SQLitePlatformWin32(), d.Filename))
             {
-                db.Insert(new Lesson() { Name = "aaaa" });
+                db.Insert(new Lesson() { Name = "aaaa", UserId = 1 });
                 try
                 {
-                    db.Insert(new Lesson() { Name = "aaaa" });
+                    db.Insert(new Lesson() { Name = "aaaa", UserId = 1});
+                    Assert.Fail("Unique name constraint should appear");
                 } 
                 catch (SQLiteException e)
                 {
                     StringAssert.Contains(e.Message, "Constraint");
+                }
+                try
+                {
+                    db.Insert(new Lesson() { Name = "asdasdasdasd"});
+                    Assert.Fail("NOTNULL user id constraint should appear");
+                }
+                catch (SQLiteException e)
+                {
+                    StringAssert.Contains(e.Message, "NOT NULL");
                 }
             }
         }

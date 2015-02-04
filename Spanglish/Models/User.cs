@@ -16,7 +16,7 @@ namespace Spanglish.Models
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
 
-        [MaxLength(20)]
+        [MaxLength(Constants.MaxUsernameLength), NotNull]
         public string Name
         {
             get { return _name; }

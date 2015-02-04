@@ -27,7 +27,7 @@ namespace Spanglish.Models
             }
         }
 
-        public Database() : this(Constants.ProductionDatabaseName)
+        public Database() : this(Constants.ProductionDatabasePath)
         {
              
         }

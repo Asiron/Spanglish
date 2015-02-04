@@ -25,7 +25,8 @@
                 <RowDefinition Height="1*"></RowDefinition>
                 <RowDefinition Height="1*"></RowDefinition>
                 <RowDefinition Height="1*"></RowDefinition>
-            </Grid.RowDefinitions>
+                <RowDefinition Height="1*"></RowDefinition>
+                </Grid.RowDefinitions>
             <StackPanel Grid.Row="0" Margin="10">
                 <Label Name="LabelEnterLogin" Content="Enter Login:" HorizontalAlignment="Center"></Label>
                 <TextBox Name="TbEnterLogin" HorizontalContentAlignment="Center" Text="{Binding NewLogin, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}">
@@ -46,6 +47,25 @@
                 </TextBox>
             </StackPanel>
             <StackPanel Grid.Row="1" Margin="10">
+                <Label Name="LabelEnterName" Content="Enter Name:" HorizontalAlignment="Center"></Label>
+                <TextBox Name="TbEnterName" HorizontalContentAlignment="Center" Text="{Binding NewName, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}">
+                    <Validation.ErrorTemplate>
+                        <ControlTemplate>
+                            <StackPanel>
+                                <AdornedElementPlaceholder x:Name="textBox"/>
+                                <ItemsControl ItemsSource="{Binding}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock HorizontalAlignment="Center" Text="{Binding ErrorContent}" Foreground="Red"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </ControlTemplate>
+                    </Validation.ErrorTemplate>
+                </TextBox>
+            </StackPanel>
+                <StackPanel Grid.Row="2" Margin="10">
                 <Label x:Name="LabelEnterPassword" Content="Enter Password:" HorizontalAlignment="Center" Margin="104,0"/>
                 <PasswordBox x:Name="TbEnterPassword" HorizontalContentAlignment="Center" misc:PasswordBoxAssistant.BindPassword="true" misc:PasswordBoxAssistant.BoundPassword="{Binding NewPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}">
                     <Validation.ErrorTemplate>
@@ -64,7 +84,7 @@
                     </Validation.ErrorTemplate>
                 </PasswordBox>
             </StackPanel>
-            <StackPanel Grid.Row="2" Margin="10">
+            <StackPanel Grid.Row="3" Margin="10">
                 <Label Name="LabelEnterPasswordAgain" Content="Confirm Password:" HorizontalAlignment="Center"></Label>
                 <PasswordBox Name="TbEnterPasswordAgain" HorizontalContentAlignment="Center" misc:PasswordBoxAssistant.BindPassword="true" misc:PasswordBoxAssistant.BoundPassword="{Binding Path=NewPasswordConfirmation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}">
                     <Validation.ErrorTemplate>
