@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:vs="clr-namespace:Spanglish.Validators"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="800">
     
@@ -32,6 +33,18 @@
             <Setter Property="HorizontalGridLinesBrush" Value="Transparent" />
             <Setter Property="VerticalGridLinesBrush" Value="#FFD3D0" />
             <Setter Property="RowHeaderWidth" Value="0" />
+        </Style>
+
+        
+        <!-- Row Style-->
+        <Style x:Key="RowStyle" TargetType="{x:Type DataGridRow}">
+            <!--<Setter Property="Margin" Value="4"/>-->
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="true">
+                    <Setter Property="BorderThickness" Value="1"/>
+                    <Setter Property="BorderBrush" Value="Red"/>
+                </Trigger>
+            </Style.Triggers>
         </Style>
 
         <Style TargetType="{x:Type TextBox}">
@@ -85,7 +98,7 @@
                                 <DataTemplate>
                                     <Grid Margin="2">
                                         <Grid.InputBindings>
-                                            <MouseBinding Gesture="LeftClick"  Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}, Path=DataContext.ShowLessonCmd}"/>
+                                            <MouseBinding Gesture="LeftDoubleClick"  Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}, Path=DataContext.ShowLessonCmd}"/>
                                         </Grid.InputBindings>
                                         <Grid.RowDefinitions>
                                             <RowDefinition/>
@@ -117,44 +130,33 @@
                 </Border>
                 <Border Grid.Column="1" Grid.Row="2" Visibility="{Binding ShowModifyLessonSubView, Mode=TwoWay, Converter={StaticResource boolToVisibility}}">
                     <DataGrid Name="MainGrid" 
-                             
+                          RowStyle="{StaticResource RowStyle}"    
                           ItemsSource="{Binding CurrentLessonWords, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
                           SelectedItem="{Binding CurrentEditingWord}"
                           AutoGenerateColumns="False" 
                           DockPanel.Dock="Top">
+                        
+                        <DataGrid.RowValidationRules>
+                            <ExceptionValidationRule></ExceptionValidationRule>
+                        </DataGrid.RowValidationRules>
+
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="First Language Defintion" Width="4*" IsReadOnly="false">
+                            <DataGridTextColumn Header="First Language Defintion" Width="5*" IsReadOnly="false">
                                 <DataGridTextColumn.Binding>
-                                    <Binding Path="FirstLangDefinition" UpdateSourceTrigger="PropertyChanged">
-                                        <Binding.ValidationRules>
-                                            <vs:WordDefinitionValidationRule ValidationStep="RawProposedValue">
-                                                
-                                            </vs:WordDefinitionValidationRule>
-                                        </Binding.ValidationRules>
-                                    </Binding>
+                                    <Binding Path="FirstLangDefinition" UpdateSourceTrigger="PropertyChanged" ValidatesOnExceptions="True"/>
                                 </DataGridTextColumn.Binding>
                             </DataGridTextColumn>
-                            <DataGridTextColumn Header="Second Language Defintion" Width="4*" IsReadOnly="false">
+                            <DataGridTextColumn Header="Second Language Defintion" Width="5*" IsReadOnly="false">
                                 <DataGridTextColumn.Binding>
-                                    <Binding Path="SecondLangDefinition" UpdateSourceTrigger="PropertyChanged">
-                                        <Binding.ValidationRules>
-                                            <vs:WordDefinitionValidationRule ValidationStep="RawProposedValue">
-                                            </vs:WordDefinitionValidationRule>
-                                        </Binding.ValidationRules>
-                                    </Binding>
+                                    <Binding Path="SecondLangDefinition" UpdateSourceTrigger="PropertyChanged" ValidatesOnExceptions="True"/>
                                 </DataGridTextColumn.Binding>
                             </DataGridTextColumn>
-                            <DataGridTextColumn Header="Level" Width="0.7*" IsReadOnly="false">
+                            <DataGridTextColumn Header="Level" Width="1.5*" IsReadOnly="false">
                                 <DataGridTextColumn.Binding>
-                                    <Binding Path="Level" UpdateSourceTrigger="PropertyChanged">
-                                        <Binding.ValidationRules>
-                                            <vs:LevelValidationrule ValidationStep="RawProposedValue">
-                                            </vs:LevelValidationrule>
-                                        </Binding.ValidationRules>
-                                    </Binding>
+                                    <Binding Path="Level" UpdateSourceTrigger="PropertyChanged" ValidatesOnExceptions="True"/>
                                 </DataGridTextColumn.Binding>
                             </DataGridTextColumn>
-                            <DataGridTemplateColumn Header="Delete">
+                            <DataGridTemplateColumn Header="Delete" Width="1*">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <Button Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}, Path=DataContext.DeleteSelectedWordCmd}" Content="Delete"/>
@@ -162,6 +164,11 @@
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
                         </DataGrid.Columns>
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="AddingNewEvent">
+                                <i:InvokeCommandAction Command="{Binding AddNewLessonRowCmd}"></i:InvokeCommandAction>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
                     </DataGrid>
                 </Border>
             </Grid>

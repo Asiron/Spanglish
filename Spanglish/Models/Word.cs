@@ -19,21 +19,34 @@ namespace Spanglish.Models
         byte? _level = null;
         int? _lessonId = null;
 
+        bool _isNew = false;
+
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
 
-        [MaxLength(80), NotNull]//, Indexed(Name = "Def", Order = 1, Unique = true)]
+        [MaxLength(80), NotNull]
         public string FirstLangDefinition
         {
             get { return _firstLangDefinition; }
-            set { _firstLangDefinition = value; OnPropertyChanged("FirstLangDefinition"); }
+            set 
+            { 
+                if ( String.IsNullOrWhiteSpace(value) )
+                    throw new ArgumentException("FirstLangExcept"); 
+                _firstLangDefinition = value; 
+                OnPropertyChanged("FirstLangDefinition"); }
         }
 
-        [MaxLength(80), NotNull]//, Indexed(Name = "Def", Order = 2, Unique = true)]
+        [MaxLength(80), NotNull]
         public string SecondLangDefinition
         {
             get { return _secondLangDefinition; }
-            set { _secondLangDefinition = value; OnPropertyChanged("SecondLangDefinition"); }
+            set
+            {
+                if ( String.IsNullOrWhiteSpace(value) )
+                    throw new ArgumentException("SecondLangExcept");
+                _secondLangDefinition = value; 
+                OnPropertyChanged("SecondLangDefinition");
+            }
         }
 
         [MaxLength(80)]
@@ -65,6 +78,10 @@ namespace Spanglish.Models
             }
         }
 
+
+        public bool IsModified { set; get; }
+
+        [Ignore]
         public bool HasImage
         {
             get
