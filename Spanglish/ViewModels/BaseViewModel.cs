@@ -15,6 +15,17 @@ namespace Spanglish.Misc
         private readonly Dictionary<string, ICollection<string>> _validationErrors = new Dictionary<string,ICollection<string>>();
 
         public delegate ICollection<string> ValidationPredicate(object value);
+        public ValidationPredicate SimpleValidationPredicate(string errorString, Predicate<object> predicate)
+        {
+            return (param) => {
+                var list = new List<string>();
+                if (predicate(param))
+                {
+                    list.Add(errorString);
+                }
+                return list;
+            };
+        }
 
         protected void ValidateProperty(string propertyName, object value, ValidationPredicate predicate)
         {

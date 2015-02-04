@@ -44,7 +44,7 @@ namespace Spanglish.ViewModels
             set
             {
                 _newName = value;
-                ValidateProperty("NewName", _newName, (p) => _nameValidatorService.ValidateString(p.ToString()));
+                ValidateProperty("NewName", _newName, (p) => _nameValidatorService.ValidateString(p as string));
             }
         }
 
@@ -54,7 +54,7 @@ namespace Spanglish.ViewModels
             set
             {
                 _newPassword = value;
-                ValidateProperty("NewPassword", _newPassword, (p) => _passwordValidatorService.ValidateString(p.ToString()));
+                ValidateProperty("NewPassword", _newPassword, (p) => _passwordValidatorService.ValidateString(p as string));
             }
         }
         public string NewPasswordConfirmation
@@ -65,10 +65,7 @@ namespace Spanglish.ViewModels
                 _newPasswordConfirmation = value;
                 ValidateProperty("NewPasswordConfirmation",
                     _newPasswordConfirmation,
-                    (p) =>
-                    {
-                        return p.ToString() != NewPassword  ? new List<string>{"Confirmation does not match password"} : new List<string>();
-                    });
+                    SimpleValidationPredicate("Confirmation does not match password", (p) => !(p as string).Equals(NewPassword)));
             }
         }
 

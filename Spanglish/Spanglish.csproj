@@ -65,7 +65,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Misc\IBaseViewModel.cs" />
     <Compile Include="Misc\PasswordBoxAssistant.cs" />
     <Compile Include="Misc\Singleton.cs" />
     <Compile Include="Misc\ViewModelManger.cs" />

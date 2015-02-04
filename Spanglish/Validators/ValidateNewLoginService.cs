@@ -13,8 +13,6 @@ namespace Spanglish.Validators
     {
         public ICollection<string> ValidateString(string login)
         {
-            Console.WriteLine(login);
-
             ICollection<string>  validationErrors = new List<string>();
             int count = 0;
             using (var db = Database.Instance.GetConnection())

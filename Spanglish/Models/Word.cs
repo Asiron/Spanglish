@@ -19,22 +19,33 @@ namespace Spanglish.Models
         byte? _level = null;
         int? _lessonId = null;
 
+        public Word()
+        {
+            SetFirstLangPropertyDel += () => OnPropertyChanged("FirstLangDefinition");
+            SetSecondLangPropertyDel += () => OnPropertyChanged("SecondLangDefinition");
+        }
+
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
+
+        public delegate void VoidDel();
+
+        public VoidDel SetFirstLangPropertyDel = () => {};
+        public VoidDel SetSecondLangPropertyDel = () => { };
 
 
         [MaxLength(80), NotNull, Indexed(Name = "Def", Order = 1, Unique = true)]
         public string FirstLangDefinition
         {
             get { return _firstLangDefinition; }
-            set { _firstLangDefinition = value; OnPropertyChanged("FirstLangDefinition"); }
+            set { _firstLangDefinition = value; SetFirstLangPropertyDel(); }
         }
 
         [MaxLength(80), NotNull, Indexed(Name = "Def", Order = 2, Unique = true)]
         public string SecondLangDefinition
         {
             get { return _secondLangDefinition; }
-            set { _secondLangDefinition = value; OnPropertyChanged("SecondLangDefinition"); }
+            set { _secondLangDefinition = value; SetSecondLangPropertyDel(); }
         }
 
         [MaxLength(80)]
