@@ -1,0 +1,79 @@
+﻿<UserControl x:Class="Spanglish.UserControls.AnswersResultsControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             x:Name="parent"
+             d:DesignHeight="300" d:DesignWidth="300">
+
+    <UserControl.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="FontWeight" Value="Bold"></Setter>
+            <Setter Property="FontFamily" Value="Helvetica"></Setter>
+            <Setter Property="FontSize" Value="18"></Setter>
+            <Setter Property="VerticalAlignment" Value="Center"></Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid DataContext="{Binding ElementName=parent}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="Correct: " HorizontalAlignment="Right" Foreground="Green" />
+            <TextBlock Grid.Column="1" Text="{Binding Path=CorrectAnswers}"  HorizontalAlignment="Left" Foreground="Green"/>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="Wrong: " HorizontalAlignment="Right" Foreground="Red" />
+            <TextBlock Grid.Column="1" Text="{Binding Path=WrongAnswers}" HorizontalAlignment="Left" Foreground="Red"/>
+        </Grid>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="Skipped: " HorizontalAlignment="Right" Foreground="Aquamarine"/>
+            <TextBlock Grid.Column="1" Text="{Binding Path=SkippedAnswers}" HorizontalAlignment="Left" Foreground="Aquamarine"/>
+        </Grid>
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="150*"/>
+                <ColumnDefinition Width="31*"/>
+                <ColumnDefinition Width="119*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="Total: " HorizontalAlignment="Right" Foreground="YellowGreen" Grid.ColumnSpan="2" Margin="0,14,30,14" />
+            <TextBlock Grid.Column="1" Text="{Binding Path=TotalAnswers}" HorizontalAlignment="Left" Foreground="YellowGreen" Margin="0,14"/>
+        </Grid>
+        <Grid Grid.Row="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="Left: " HorizontalAlignment="Right" Foreground="Maroon"/>
+            <TextBlock Grid.Column="1" Text="{Binding Path=LeftAnswers}" HorizontalAlignment="Left" Foreground="Maroon"/>
+        </Grid>
+        <Grid Grid.Row="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="Time: " HorizontalAlignment="Right" Foreground="RoyalBlue"/>
+            <TextBlock Grid.Column="1" Text="{Binding Path=TimeElapsed}" HorizontalAlignment="Left" Foreground="RoyalBlue"/>
+        </Grid>
+    </Grid>
+</UserControl>

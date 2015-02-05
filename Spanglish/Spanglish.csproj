@@ -66,7 +66,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="UserControls\AnswersResultsControl.xaml.cs">
+      <DependentUpon>AnswersResultsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Util\IBaseViewModel.cs" />
+    <Compile Include="Util\InvertedBoolToVisibilityConverter.cs" />
     <Compile Include="Util\PasswordBoxAssistant.cs" />
     <Compile Include="Util\Singleton.cs" />
     <Compile Include="Util\ViewModelManger.cs" />
@@ -76,7 +80,6 @@
     <Compile Include="Validators\ValidateNewLoginService.cs" />
     <Compile Include="Validators\ValidateNewPasswordService.cs" />
     <Compile Include="Validators\WordValidatotionRule.cs" />
-    <Compile Include="ViewModels\ApplicationViewModel.cs" />
     <Compile Include="ViewModels\CreateAccountViewModel.cs" />
     <Compile Include="ViewModels\CreateNewLessonsViewModel.cs" />
     <Compile Include="Util\ObservableObject.cs" />
@@ -104,6 +107,10 @@
     <Compile Include="Views\TypingLessonView.xaml.cs">
       <DependentUpon>TypingLessonView.xaml</DependentUpon>
     </Compile>
+    <Page Include="UserControls\AnswersResultsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\CreateNewLessonsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

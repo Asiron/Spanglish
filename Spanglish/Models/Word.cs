@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Spanglish.Models
 {
-    public class Word : ValidableObject  
+    public class Word : ValidableObject, ICloneable
     {
 
         string _firstLangDefinition = null;
@@ -22,7 +22,16 @@ namespace Spanglish.Models
 
         private readonly IValidateInteger _levelValidationService;
 
-        bool _isNew = false;
+        public static Word CopyFrom(Word other)
+        {
+            return new Word()
+            {
+                FirstLangDefinition = other.FirstLangDefinition,
+                SecondLangDefinition = other.SecondLangDefinition,
+                Level = other.Level,
+                LessonId = other.LessonId
+            };
+        }
 
         public Word()
         {
