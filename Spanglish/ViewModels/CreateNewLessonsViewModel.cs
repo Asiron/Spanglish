@@ -106,10 +106,11 @@ namespace Spanglish.ViewModels
                 {
                     count = db.Table<Lesson>().Where(l => l.UserId == currentUser.Id && l.Name.Equals(p)).Count();
                 }
-                if (count > 1)
+                if (count > 1 || (CurrentLesson != null && CurrentLesson.Name.Equals(p as string)))
                     ret.Add("Lesson name has to be unique");
                 else if ((p as string).Length < 4)
                     ret.Add("Lesson name has to be longer than 4");
+
                 return ret;
             };
             ShowModifyLessonSubView = false;
@@ -120,7 +121,7 @@ namespace Spanglish.ViewModels
 
         private bool CanSaveLesson()
         {
-            return CurrentLessonWords.All<Word>((w) => !w.HasErrors);
+            return CurrentEditingWord != null && !CurrentEditingWord.HasErrors && CurrentLessonWords.All<Word>((w) => !w.HasErrors) ;
         }
 
         private void SaveLesson()
@@ -189,6 +190,8 @@ namespace Spanglish.ViewModels
                     CurrentLessonWords.Add(word);
                 }
                 CurrentLessonWords.CollectionChanged += CurrentLessonWords_CollectionChanged;
+                CurrentEditingWord = new Word();
+                OnPropertyChanged("CurrentEditingWord");
                 OnPropertyChanged("CurrentLessonWords");
                 OnPropertyChanged("CurrentLesson");
             }
