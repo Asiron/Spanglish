@@ -4,21 +4,20 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Spanglish.Misc;
 
-namespace Spanglish.Misc
+namespace Spanglish.Util
 {
     public class ViewModelManager : Singleton<ViewModelManager>, INotifyPropertyChanged
     {
 
-        private Stack<BaseViewModel> _viewModels;
+        private Stack<IBaseViewModel> _viewModels;
 
         public ViewModelManager()
         {
-            _viewModels = new Stack<BaseViewModel>();
+            _viewModels = new Stack<IBaseViewModel>();
         }
 
-        public BaseViewModel CurrentModel
+        public IBaseViewModel CurrentModel
         {
             get { return _viewModels.Peek(); }
             set

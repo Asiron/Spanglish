@@ -1,4 +1,4 @@
-﻿using Spanglish.Misc;
+﻿using Spanglish.Util;
 using Spanglish.Models;
 using Spanglish.Validators;
 using System;
@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Spanglish.ViewModels
 {
-    class CreateAccountViewModel : BaseViewModel
+    class CreateAccountViewModel : ValidableObject, IBaseViewModel
     {
         public string Name
         {

@@ -1,4 +1,4 @@
-﻿using Spanglish.Misc;
+﻿using Spanglish.Util;
 using Spanglish.Models;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Spanglish.ViewModels
 {
-    class StatisticsViewModel : BaseViewModel
+    class StatisticsViewModel : ValidableObject, IBaseViewModel
     {
         public User CurrentUser { get; private set; }
 

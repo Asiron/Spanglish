@@ -1,4 +1,4 @@
-﻿using Spanglish.Misc;
+﻿using Spanglish.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +8,7 @@ using System.Windows.Input;
 
 namespace Spanglish.ViewModels
 {
-    public class ApplicationViewModel
+    public class ApplicationViewModel : ValidableObject, IBaseViewModel
     {
     }
 }

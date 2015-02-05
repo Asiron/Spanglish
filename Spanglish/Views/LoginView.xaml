@@ -3,8 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Spanglish"
-             xmlns:misc="clr-namespace:Spanglish.Misc"
+             xmlns:local="clr-namespace:Spanglish.Util"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="800">
     <Grid>
@@ -22,7 +21,7 @@
                 <Label Margin="10" Name="LabelEnterLogin" Content="Enter Login:" HorizontalAlignment="Center"></Label>
                 <TextBox Margin="10" Name="TbEnterLogin" HorizontalContentAlignment="Center" Text="{Binding Login, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"></TextBox>
                 <Label Margin="10" Name="LabelEnterPassword" Content="Enter Password:" HorizontalAlignment="Center"></Label>
-                <PasswordBox Margin="10" Name="TbEnterPassword" HorizontalContentAlignment="Center" misc:PasswordBoxAssistant.BindPassword="true" misc:PasswordBoxAssistant.BoundPassword="{Binding Path=Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></PasswordBox>
+                <PasswordBox Margin="10" Name="TbEnterPassword" HorizontalContentAlignment="Center" local:PasswordBoxAssistant.BindPassword="true" local:PasswordBoxAssistant.BoundPassword="{Binding Path=Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></PasswordBox>
             </StackPanel>
         </Border>
 

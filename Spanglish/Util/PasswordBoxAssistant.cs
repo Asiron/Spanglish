@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Spanglish.Misc
+namespace Spanglish.Util
 {
     public static class PasswordBoxAssistant
     {

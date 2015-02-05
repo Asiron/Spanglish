@@ -1,4 +1,5 @@
-﻿using Spanglish.Misc;
+﻿using Spanglish.Util;
+using Spanglish.Validators;
 using Spanglish.ViewModels;
 using SQLite.Net.Attributes;
 using System;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Spanglish.Models
 {
-    public class Word : ObservableObject
+    public class Word : ValidableObject  
     {
 
         string _firstLangDefinition = null;
@@ -19,7 +20,14 @@ namespace Spanglish.Models
         byte? _level = null;
         int? _lessonId = null;
 
+        private readonly IValidateInteger _levelValidationService;
+
         bool _isNew = false;
+
+        public Word()
+        {
+            _levelValidationService = new ValidateLevelService();
+        }
 
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
@@ -30,10 +38,11 @@ namespace Spanglish.Models
             get { return _firstLangDefinition; }
             set 
             { 
-                if ( String.IsNullOrWhiteSpace(value) )
-                    throw new ArgumentException("FirstLangExcept"); 
-                _firstLangDefinition = value; 
-                OnPropertyChanged("FirstLangDefinition"); }
+                _firstLangDefinition = value;
+                OnPropertyChanged("FirstLangDefinition");
+                ValidateProperty("FirstLangDefinition", _firstLangDefinition,
+                    SimpleValidationPredicate("Cannot be blank", (p) => String.IsNullOrWhiteSpace(p as string)));
+            }
         }
 
         [MaxLength(80), NotNull]
@@ -42,10 +51,10 @@ namespace Spanglish.Models
             get { return _secondLangDefinition; }
             set
             {
-                if ( String.IsNullOrWhiteSpace(value) )
-                    throw new ArgumentException("SecondLangExcept");
                 _secondLangDefinition = value; 
                 OnPropertyChanged("SecondLangDefinition");
+                ValidateProperty("SecondLangDefinition", _secondLangDefinition,
+                    SimpleValidationPredicate("Cannot be blank", (p) => String.IsNullOrWhiteSpace(p as string)));
             }
         }
 
@@ -72,14 +81,11 @@ namespace Spanglish.Models
             }
             set
             {
-                if (value < 0 || value > Constants.MaxWordLevel)
-                    throw new ArgumentException("ExceptionLevel");
-                _level = value;
+               _level = value;
+                OnPropertyChanged("Level");
+                ValidateProperty("Level", _level, (p) => _levelValidationService.ValidateInteger(p as byte?));
             }
         }
-
-
-        public bool IsModified { set; get; }
 
         [Ignore]
         public bool HasImage

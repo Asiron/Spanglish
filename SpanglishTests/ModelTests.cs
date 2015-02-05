@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Spanglish.Models;
-using Spanglish.Misc;
+using Spanglish.Util;
 using System.IO;
 
 using SQLite.Net;

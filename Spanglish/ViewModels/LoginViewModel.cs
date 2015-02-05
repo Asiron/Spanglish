@@ -1,4 +1,4 @@
-﻿using Spanglish.Misc;
+﻿using Spanglish.Util;
 using Spanglish.Models;
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Spanglish.ViewModels
 {
-    class LoginViewModel : BaseViewModel
+    class LoginViewModel : ValidableObject, IBaseViewModel
     {
         public RelayCommand LoginCmd { get; set; }
         public RelayCommand CreateNewAccountCmd { get; set; }

@@ -4,9 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:vs="clr-namespace:Spanglish.Validators"
-             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              mc:Ignorable="d" 
-             d:DesignHeight="600" d:DesignWidth="800">
+             d:DesignHeight="600" d:DesignWidth="800"
+             >
     
     <UserControl.Resources>
         <BooleanToVisibilityConverter  x:Key="boolToVisibility" />
@@ -129,47 +130,63 @@
                     </Grid>
                 </Border>
                 <Border Grid.Column="1" Grid.Row="2" Visibility="{Binding ShowModifyLessonSubView, Mode=TwoWay, Converter={StaticResource boolToVisibility}}">
-                    <DataGrid Name="MainGrid" 
-                          RowStyle="{StaticResource RowStyle}"    
-                          ItemsSource="{Binding CurrentLessonWords, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
-                          SelectedItem="{Binding CurrentEditingWord}"
-                          AutoGenerateColumns="False" 
-                          DockPanel.Dock="Top">
-                        
-                        <DataGrid.RowValidationRules>
-                            <ExceptionValidationRule></ExceptionValidationRule>
-                        </DataGrid.RowValidationRules>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="10*"></RowDefinition>
+                            <RowDefinition Height="1*"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <DataGrid Grid.Row="0" Name="MainGrid" 
+                            RowStyle="{StaticResource RowStyle}"    
+                            ItemsSource="{Binding CurrentLessonWords, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
+                            SelectedItem="{Binding CurrentEditingWord, UpdateSourceTrigger=PropertyChanged}"
+                            AutoGenerateColumns="False" 
+                            DockPanel.Dock="Top"
+                            CanUserAddRows="False"
+                        >
 
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="First Language Defintion" Width="5*" IsReadOnly="false">
-                                <DataGridTextColumn.Binding>
-                                    <Binding Path="FirstLangDefinition" UpdateSourceTrigger="PropertyChanged" ValidatesOnExceptions="True"/>
-                                </DataGridTextColumn.Binding>
-                            </DataGridTextColumn>
-                            <DataGridTextColumn Header="Second Language Defintion" Width="5*" IsReadOnly="false">
-                                <DataGridTextColumn.Binding>
-                                    <Binding Path="SecondLangDefinition" UpdateSourceTrigger="PropertyChanged" ValidatesOnExceptions="True"/>
-                                </DataGridTextColumn.Binding>
-                            </DataGridTextColumn>
-                            <DataGridTextColumn Header="Level" Width="1.5*" IsReadOnly="false">
-                                <DataGridTextColumn.Binding>
-                                    <Binding Path="Level" UpdateSourceTrigger="PropertyChanged" ValidatesOnExceptions="True"/>
-                                </DataGridTextColumn.Binding>
-                            </DataGridTextColumn>
-                            <DataGridTemplateColumn Header="Delete" Width="1*">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Button Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}, Path=DataContext.DeleteSelectedWordCmd}" Content="Delete"/>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                        </DataGrid.Columns>
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="AddingNewEvent">
-                                <i:InvokeCommandAction Command="{Binding AddNewLessonRowCmd}"></i:InvokeCommandAction>
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-                    </DataGrid>
+                            <DataGrid.RowValidationRules>
+                                <DataErrorValidationRule></DataErrorValidationRule>
+                            </DataGrid.RowValidationRules>
+
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="First Language Defintion" Width="5*" IsReadOnly="False">
+                                    <DataGridTextColumn.Binding>
+                                        <Binding Path="FirstLangDefinition" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" >
+                                        </Binding>
+                                    </DataGridTextColumn.Binding>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Second Language Defintion" Width="5*" IsReadOnly="False">
+                                    <DataGridTextColumn.Binding>
+                                        <Binding Path="SecondLangDefinition" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged"/>
+                                    </DataGridTextColumn.Binding>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Level" Width="1.5*" IsReadOnly="False">
+                                    <DataGridTextColumn.Binding>
+                                        <Binding Path="Level" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged"/>
+                                    </DataGridTextColumn.Binding>
+                                </DataGridTextColumn>
+                                <DataGridTemplateColumn Header="Delete" Width="1*">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}, Path=DataContext.DeleteSelectedWordCmd}" Content="Delete"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <Grid Grid.Row="1" Margin="4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="5*"></ColumnDefinition>
+                                <ColumnDefinition Width="5*"></ColumnDefinition>
+                                <ColumnDefinition Width="1.5*"></ColumnDefinition>
+                                <ColumnDefinition Width="1*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <TextBox Text="{Binding CurrentEditingWord.FirstLangDefinition, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="2" Grid.Column="0"/>
+                            <TextBox Text="{Binding CurrentEditingWord.SecondLangDefinition, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" Margin="2" Grid.Column="1"></TextBox>
+                            <TextBox Text="{Binding CurrentEditingWord.Level, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="2" Grid.Column="2"></TextBox>
+                            <Button Grid.Column="3" Margin="2.1,2,1,1" Content="Add" Command="{Binding AddNewWordToLessonCmd}"></Button>
+                        </Grid>
+                    </Grid>
                 </Border>
             </Grid>
         </Border>
@@ -178,7 +195,7 @@
                 <ColumnDefinition Width="5*"></ColumnDefinition>
                 <ColumnDefinition Width="1*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <Button Margin="8" Grid.Column="0" Content="Save!" Command="{Binding SaveLessonsCmd}"></Button>
+            <Button Margin="8" Grid.Column="0" Content="Save!" Command="{Binding SaveLessonCmd}"></Button>
             <Button Margin="8" Grid.Column="1" Content="Go back" Command="{Binding RevertToPreviousViewModelCmd}"></Button>
 
         </Grid>

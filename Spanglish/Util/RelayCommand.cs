@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace Spanglish.Misc
+namespace Spanglish.Util
 {
     public class RelayCommand : ICommand
     {

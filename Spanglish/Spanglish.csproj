@@ -48,6 +48,7 @@
     </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -65,18 +66,20 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Misc\PasswordBoxAssistant.cs" />
-    <Compile Include="Misc\Singleton.cs" />
-    <Compile Include="Misc\ViewModelManger.cs" />
+    <Compile Include="Util\IBaseViewModel.cs" />
+    <Compile Include="Util\PasswordBoxAssistant.cs" />
+    <Compile Include="Util\Singleton.cs" />
+    <Compile Include="Util\ViewModelManger.cs" />
+    <Compile Include="Validators\IValidateInteger.cs" />
     <Compile Include="Validators\IValidateString.cs" />
-    <Compile Include="Validators\LevelValidationRule.cs" />
+    <Compile Include="Validators\ValidateLevelService.cs" />
     <Compile Include="Validators\ValidateNewLoginService.cs" />
     <Compile Include="Validators\ValidateNewPasswordService.cs" />
     <Compile Include="Validators\WordValidatotionRule.cs" />
     <Compile Include="ViewModels\ApplicationViewModel.cs" />
     <Compile Include="ViewModels\CreateAccountViewModel.cs" />
     <Compile Include="ViewModels\CreateNewLessonsViewModel.cs" />
-    <Compile Include="Misc\ObservableObject.cs" />
+    <Compile Include="Util\ObservableObject.cs" />
     <Compile Include="ViewModels\SimpleLessonViewModel.cs" />
     <Compile Include="ViewModels\StatisticsViewModel.cs" />
     <Compile Include="ViewModels\TypingLessonViewModel.cs" />
@@ -125,14 +128,14 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Misc\Constants.cs" />
-    <Compile Include="Misc\RelayCommand.cs" />
+    <Compile Include="Util\Constants.cs" />
+    <Compile Include="Util\RelayCommand.cs" />
     <Compile Include="Models\Database.cs" />
     <Compile Include="Models\History.cs" />
     <Compile Include="Models\Lesson.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\Word.cs" />
-    <Compile Include="ViewModels\BaseViewModel.cs" />
+    <Compile Include="Util\ValidableObject.cs" />
     <Compile Include="Views\LoginView.xaml.cs">
       <DependentUpon>LoginView.xaml</DependentUpon>
     </Compile>

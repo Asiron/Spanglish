@@ -1,4 +1,4 @@
-﻿using Spanglish.Misc;
+﻿using Spanglish.Util;
 using Spanglish.Models;
 using SQLite.Net;
 using System;
@@ -11,12 +11,14 @@ using System.Threading.Tasks;
 
 namespace Spanglish.ViewModels
 {
-    class CreateNewLessonsViewModel : BaseViewModel
+    class CreateNewLessonsViewModel : ValidableObject, IBaseViewModel
     {
         public RelayCommand RevertToPreviousViewModelCmd { set; get; }
         public RelayCommand AddNewLessonCmd { set; get; }
         public RelayCommand DeleteSelectedWordCmd { set; get; }
         public RelayCommand ShowLessonCmd { set; get; }
+        public RelayCommand AddNewWordToLessonCmd { set; get; }
+        public RelayCommand SaveLessonCmd { set; get; }
         public User CurrentUser { set; get; }
 
         private ValidationPredicate _newLessonValidationService;
@@ -55,6 +57,7 @@ namespace Spanglish.ViewModels
         }
         public Lesson PreviousLesson { set; get; }
         public ObservableCollection<Lesson> Lessons { set; get; }
+
         private ObservableCollection<Word> _currentLessonWords;
         public ObservableCollection<Word> CurrentLessonWords
         {
@@ -62,20 +65,18 @@ namespace Spanglish.ViewModels
             set
             {
                 _currentLessonWords = value;
+                OnPropertyChanged("CurrentLessonWords");
             }
         }
         private Word _currentEditingWord;
         public Word CurrentEditingWord
         {
-            set
-            {
+            get { return _currentEditingWord;  }
+            set 
+            { 
                 _currentEditingWord = value;
-                if (_currentEditingWord != null)
-                {
-                    Console.WriteLine(_currentEditingWord.FirstLangDefinition); 
-                }
+                OnPropertyChanged("CurrentEditingWord");
             }
-            get { return _currentEditingWord; }
         }
 
         public CreateNewLessonsViewModel(User currentUser)
@@ -84,23 +85,95 @@ namespace Spanglish.ViewModels
             RevertToPreviousViewModelCmd = new RelayCommand((p) => ViewModelManager.Instance.ReturnToPreviousModel());
             AddNewLessonCmd = new RelayCommand((p) => StartAddingNewLesson(), (p) => CanStartAddingNewLesson());
             ShowLessonCmd = new RelayCommand((p) => ShowLesson(), (p) => CurrentLesson != null);
+            SaveLessonCmd = new RelayCommand((p) => SaveLesson(), (p) => CanSaveLesson());
             DeleteSelectedWordCmd = new RelayCommand((p) => CurrentLessonWords.Remove(CurrentEditingWord), 
                 (p) => CurrentEditingWord != null && CurrentLessonWords.Count() > 1);
-
+            AddNewWordToLessonCmd = new RelayCommand((p) => AddNewWordToLesson(), (p) => CanAddNewWordToLesson());
             using (var db = Database.Instance.GetConnection())
             {
-                Lessons = new ObservableCollection<Lesson>(db.Table<Lesson>().Where(lesson => lesson.UserId == currentUser.Id));
+                Lessons = new ObservableCollection<Lesson>();
+                foreach (var lesson in db.Table<Lesson>().Where(lesson => lesson.UserId == currentUser.Id))
+                {
+                    Lessons.Add(lesson);
+                }
             }
+
+            _newLessonValidationService = (p) =>
+            {
+                var ret = new List<string>();
+                int count;
+                using (var db = Database.Instance.GetConnection())
+                {
+                    count = db.Table<Lesson>().Where(l => l.UserId == currentUser.Id && l.Name.Equals(p)).Count();
+                }
+                if (count > 1)
+                    ret.Add("Lesson name has to be unique");
+                else if ((p as string).Length < 4)
+                    ret.Add("Lesson name has to be longer than 4");
+                return ret;
+            };
             ShowModifyLessonSubView = false;
             CurrentLessonWords = new ObservableCollection<Word>();
             CurrentEditingWord = new Word() {};
             CurrentLessonWords.CollectionChanged += CurrentLessonWords_CollectionChanged;
         }
 
+        private bool CanSaveLesson()
+        {
+            return CurrentLessonWords.All<Word>((w) => !w.HasErrors);
+        }
+
+        private void SaveLesson()
+        {
+            using(var db = Database.Instance.GetConnection())
+            {
+                foreach (var word in CurrentLessonWords)
+                {
+                    try
+                    {
+                        db.Delete<Word>(word.Id);
+                    }
+                    catch (SQLiteException e)
+                    {
+                        Console.WriteLine(e.Message + " LOL");
+                    }
+                    db.Insert(new Word()
+                    {
+                        FirstLangDefinition = word.FirstLangDefinition,
+                        SecondLangDefinition = word.SecondLangDefinition,
+                        Level = word.Level,
+                        LessonId = CurrentLesson.Id
+                    });
+                }
+            }
+        }
+
+        private bool CanAddNewWordToLesson()
+        {
+
+            return CurrentEditingWord != null &&  !String.IsNullOrWhiteSpace(CurrentEditingWord.FirstLangDefinition) &&
+                !String.IsNullOrWhiteSpace(CurrentEditingWord.SecondLangDefinition) &&
+                CurrentEditingWord.Level != null && !CurrentEditingWord.HasErrors;
+        }
+
+        private void AddNewWordToLesson()
+        {
+            CurrentLessonWords.Add(new Word()
+            {
+                FirstLangDefinition = CurrentEditingWord.FirstLangDefinition,
+                SecondLangDefinition = CurrentEditingWord.SecondLangDefinition,
+                Level = CurrentEditingWord.Level,
+                LessonId = CurrentLesson.Id
+            });
+        }
+
         void CurrentLessonWords_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            Console.WriteLine("COllection changed");
-  
+           // Console.WriteLine("COllection changed");
+            using(var db = Database.Instance.GetConnection())
+            {
+
+            }
         }
 
         private void ShowLesson()
@@ -110,7 +183,11 @@ namespace Spanglish.ViewModels
             using (var db = Database.Instance.GetConnection())
             {
                 CurrentLesson = db.Table<Lesson>().Where(l => l.UserId == CurrentUser.Id && l.Name == CurrentLesson.Name).First();
-                CurrentLessonWords = new ObservableCollection<Word>(db.Table<Word>().Where(w => w.LessonId == CurrentLesson.Id));
+                CurrentLessonWords = new ObservableCollection<Word>();
+                foreach( var word in db.Table<Word>().Where(w => w.LessonId == CurrentLesson.Id))
+                {
+                    CurrentLessonWords.Add(word);
+                }
                 CurrentLessonWords.CollectionChanged += CurrentLessonWords_CollectionChanged;
                 OnPropertyChanged("CurrentLessonWords");
                 OnPropertyChanged("CurrentLesson");
@@ -200,9 +277,14 @@ namespace Spanglish.ViewModels
 
         private void StartAddingNewLesson()
         {
-            //SaveLessons(CurrentLesson);
             CurrentLesson = new Lesson() { Name = NewLessonName, UserId = CurrentUser.Id };
             Lessons.Add(CurrentLesson);
+
+            using (var db = Database.Instance.GetConnection())
+            {
+                db.Insert(CurrentLesson);
+            }
+
             OnPropertyChanged("CurrentLesson");
             CurrentLessonWords = new ObservableCollection<Word>();
             CurrentLessonWords.CollectionChanged += CurrentLessonWords_CollectionChanged;

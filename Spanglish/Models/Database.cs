@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 using SQLite.Net;
 using SQLite.Net.Platform.Win32;
-using Spanglish.Misc;
+using Spanglish.Util;
 
 namespace Spanglish.Models
 {

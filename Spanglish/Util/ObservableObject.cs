@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 
-namespace Spanglish.Misc
+namespace Spanglish.Util
 {
     public abstract class ObservableObject : INotifyPropertyChanged
     {

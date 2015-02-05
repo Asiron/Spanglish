@@ -7,9 +7,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Spanglish.ViewModels;
 
-namespace Spanglish.Misc
+namespace Spanglish.Util
 {
-    public abstract class BaseViewModel : ObservableObject, INotifyDataErrorInfo
+    public abstract class ValidableObject : ObservableObject, INotifyDataErrorInfo
     {
         
         private readonly Dictionary<string, ICollection<string>> _validationErrors = new Dictionary<string,ICollection<string>>();
