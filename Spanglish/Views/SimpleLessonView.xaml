@@ -83,7 +83,7 @@
                         <TextBlock Grid.Row="0" Text="Spanish" 
                                 FontWeight="Bold" FontSize="18"
                                 HorizontalAlignment="Center" VerticalAlignment="Center" />
-                        <TextBox Grid.Row="1" IsReadOnly="True" Margin="15" Text="{Binding CurrentWord}" ></TextBox>
+                        <TextBox Grid.Row="1" IsReadOnly="True" Margin="15" Text="{Binding CurrentWord, Mode=TwoWay}" ></TextBox>
                         <TextBlock Grid.Row="2" Text="English" 
                                 FontWeight="Bold" FontSize="18"
                                 HorizontalAlignment="Center" VerticalAlignment="Center" />
@@ -108,7 +108,7 @@
                 </Border>
                 <Border Grid.Column="1" Visibility="{Binding ShowLessonPanel, Mode=TwoWay, Converter={StaticResource invBoolToVisibility}}">
                     <TextBlock Grid.Column="0" Text="{Binding LessonFinishedText}"
-                                FontWeight="Bold" FontSize="40"
+                                FontWeight="Bold" FontSize="20" TextWrapping="Wrap"
                                 HorizontalAlignment="Center" VerticalAlignment="Center" />
                 </Border>
                 <Border Grid.Column="2" Visibility="{Binding ShowResultPanel, Mode=TwoWay, Converter={StaticResource boolToVisibility}}">

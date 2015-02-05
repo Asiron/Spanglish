@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Spanglish.Models
 {
-    public class Word : ValidableObject, ICloneable
+    public class Word : ValidableObject
     {
 
         string _firstLangDefinition = null;
