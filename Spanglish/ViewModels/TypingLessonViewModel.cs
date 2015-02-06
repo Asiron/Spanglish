@@ -31,7 +31,6 @@ namespace Spanglish.ViewModels
 
         protected override bool CanAcceptCurrentWord(object p)
         {
-            Console.WriteLine("ALLA");
             return CurrentWordToEdit != null && !HasErrors;
         }
 

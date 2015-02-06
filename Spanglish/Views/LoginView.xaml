@@ -30,7 +30,7 @@
                 <ColumnDefinition Width="1*"></ColumnDefinition>
                 <ColumnDefinition Width="1*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Content="Log in" Command="{Binding LoginCmd}"></Button>
+            <Button Grid.Column="0" IsDefault="True" Content="Log in" Command="{Binding LoginCmd}"></Button>
             <Button Grid.Column="1" Content="Create new account" Command="{Binding SetCreateAccountViewCmd}"></Button>
         </Grid>
     </Grid>
