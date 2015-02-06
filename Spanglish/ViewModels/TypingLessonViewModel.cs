@@ -8,14 +8,47 @@ using System.Threading.Tasks;
 
 namespace Spanglish.ViewModels
 {
-    class TypingLessonViewModel : ValidableObject, IBaseViewModel
+    class TypingLessonViewModel : LessonViewModel
     {
-        public User CurrentUser {get; private set;}
-
-        public TypingLessonViewModel(User currentUser)
+        private string _currentWordToEdit;
+        public string CurrentWordToEdit
         {
-            CurrentUser = currentUser;
+            get { return _currentWordToEdit; }
+            set 
+            { 
+                _currentWordToEdit = value;
+                OnPropertyChanged("CurrentWordToEdit");
+                ValidateProperty("CurrentWordToEdit", _currentWordToEdit,
+                    SimpleValidationPredicate("Cannot be empty!", (p) => String.IsNullOrWhiteSpace(p as string)));
+            }
         }
 
+
+        public TypingLessonViewModel(User currentUser)
+            : base(currentUser)
+        {
+        }
+
+        protected override bool CanAcceptCurrentWord(object p)
+        {
+            Console.WriteLine("ALLA");
+            return CurrentWordToEdit != null && !HasErrors;
+        }
+
+        protected override bool CheckForWordCorrectness()
+        {
+            return CurrentWord.SecondLangDefinition.Equals(CurrentWordToEdit);
+        }
+
+        protected override void PrepareWord()
+        {
+            CurrentWordToEdit = "";
+            if (LessonWords.Count > 0)
+            {
+                CurrentWord = Word.CopyFrom(LessonWords[0]);
+                LessonWords.RemoveAt(0);
+
+            }
+        }
     }
 }

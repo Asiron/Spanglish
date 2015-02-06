@@ -18,7 +18,7 @@ namespace Spanglish.Models
         [NotNull]
         public int? UserId { set; get; }
 
-        [NotNull, MaxLength(20)]
+        [NotNull, MaxLength(20), Unique]
         public string Name
         {
             get { return _name; }

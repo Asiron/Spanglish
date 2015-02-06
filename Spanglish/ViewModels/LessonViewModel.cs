@@ -12,7 +12,7 @@ using SQLite.Net;
 
 namespace Spanglish.ViewModels
 {
-    class LessonModelView : ValidableObject, IBaseViewModel
+    public class LessonViewModel : ValidableObject, IBaseViewModel
     {
         public User CurrentUser { get; private set; }
         public RelayCommand RevertToPreviousViewModelCmd { get; private set; }
@@ -146,22 +146,17 @@ namespace Spanglish.ViewModels
             set { _showResultPanel = value; OnPropertyChanged("ShowResultPanel"); }
         }
 
-        public Word CurrentSelectedWord
-        {
-            get { return _currentSelectedWord; }
-            set { _currentSelectedWord = value; OnPropertyChanged("CurrentSelectedWord"); }
-        }
+
         public ObservableCollection<Word> LessonWords { set; get; }
         public ObservableCollection<Word> LessonWordsAll { set; get; }
         public Dictionary<Word, History> CurrentUserLessonHistory { set; get; }
-        public ObservableCollection<Word> CurrentWordsToChoose { set; get; }
         public Word CurrentWord
         {
             get { return _currentWord; }
             set { _currentWord = value; OnPropertyChanged("CurrentWord"); }
         }
 
-        public LessonModelView(User currentUser)
+        public LessonViewModel(User currentUser)
         {
             CurrentUser = currentUser;
             RevertToPreviousViewModelCmd = new RelayCommand((p => ViewModelManager.Instance.ReturnToPreviousModel()));
@@ -178,7 +173,6 @@ namespace Spanglish.ViewModels
             LessonWords = new ObservableCollection<Word>();
             LessonWordsAll = new ObservableCollection<Word>();
             CurrentUserLessonHistory = new Dictionary<Word, History>();
-            CurrentWordsToChoose = new ObservableCollection<Word>();
 
             using(var db = Database.Instance.GetConnection())
             {
@@ -243,14 +237,16 @@ namespace Spanglish.ViewModels
             PrepareWord();
         }
 
-        private bool CanAcceptCurrentWord(object p)
+        protected virtual bool CanAcceptCurrentWord(object p)
         {
-            return CurrentWordsToChoose.Count() > 0 && CurrentSelectedWord != null;
+            return false;
         }
 
         private void AcceptCurrentWord(object p)
         {
-            if (CurrentWord.FirstLangDefinition.Equals(CurrentSelectedWord.FirstLangDefinition))
+            bool isCorrect = CheckForWordCorrectness();
+
+            if (isCorrect)
             {
                 CorrectAnswers++;
                 CurrentUserLessonHistory[CurrentWord].LastTimeCorrect = DateTime.Now;
@@ -267,6 +263,11 @@ namespace Spanglish.ViewModels
                 return;
             }
             PrepareWord();
+        }
+
+        protected virtual bool CheckForWordCorrectness()
+        {
+            return false;
         }
 
         private bool CanStartStopSimpleLesson(object p)
@@ -318,22 +319,9 @@ namespace Spanglish.ViewModels
             WrongAnswers = 0;
         }
 
-        private void PrepareWord()
+        protected virtual void PrepareWord()
         {
-            CurrentWordsToChoose.Clear();
-            Random rnd = new Random();
-            foreach( var word in  LessonWordsAll.OrderBy(x => rnd.Next()).Take(5))
-            {
-                CurrentWordsToChoose.Add(Word.CopyFrom(word));
-            }
-            if (LessonWords.Count > 0) {
-                CurrentWord = Word.CopyFrom(LessonWords[0]);
-                LessonWords.RemoveAt(0);
-                if (!CurrentWordsToChoose.Contains(CurrentWord))
-                {
-                    CurrentWordsToChoose.Add(CurrentWord);
-                }
-            }
+
         }
 
         private void StopActualLesson()
@@ -370,6 +358,5 @@ namespace Spanglish.ViewModels
         private int _wrongAnswers;
         private int _skippedAnswers;
         private string _timeElapsed;
-        private Word _currentSelectedWord;
     }
 }

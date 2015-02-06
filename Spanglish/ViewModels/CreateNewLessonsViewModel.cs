@@ -106,7 +106,7 @@ namespace Spanglish.ViewModels
                 {
                     count = db.Table<Lesson>().Where(l => l.UserId == currentUser.Id && l.Name.Equals(p)).Count();
                 }
-                if (count > 1 || (CurrentLesson != null && CurrentLesson.Name.Equals(p as string)))
+                if (count >= 1 || (CurrentLesson != null && CurrentLesson.Name.Equals(p as string)))
                     ret.Add("Lesson name has to be unique");
                 else if ((p as string).Length < 4)
                     ret.Add("Lesson name has to be longer than 4");

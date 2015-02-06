@@ -27,7 +27,7 @@ namespace Spanglish.ViewModels
             CurrentUser = currentUser;
             RevertToPreviousViewModelCmd = new RelayCommand((p) => ViewModelManager.Instance.ReturnToPreviousModel());
             SetCreateNewLessonsViewCmd = new RelayCommand((p) => ViewModelManager.Instance.CurrentModel = new CreateNewLessonsViewModel(currentUser));
-            SetSimpleLessonViewCmd = new RelayCommand((p) => ViewModelManager.Instance.CurrentModel = new LessonModelView(currentUser));
+            SetSimpleLessonViewCmd = new RelayCommand((p) => ViewModelManager.Instance.CurrentModel = new SimpleLessonViewModel(currentUser));
             SetTypingLessonViewCmd = new RelayCommand((p) => ViewModelManager.Instance.CurrentModel = new TypingLessonViewModel(currentUser));
             SetStatisticsViewCmd = new RelayCommand((p) => ViewModelManager.Instance.CurrentModel = new StatisticsViewModel(currentUser));
         }

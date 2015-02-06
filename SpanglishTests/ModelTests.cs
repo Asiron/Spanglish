@@ -128,31 +128,7 @@ namespace SpanglishTests
             using (var db = new SQLiteConnection(new SQLitePlatformWin32(), d.Filename))
             {
                 Lesson l = new Lesson() { Name = "vehicles" };
-                db.Insert(new Word()
-                { 
-                    FirstLangDefinition = "a car",
-                    SecondLangDefinition = "el coche", 
-                    ImagePath = null,
-                    Level = 0, 
-                    LessonId = l.Id
-                });
-                try
-                {
-                    db.Insert(new Word()
-                    {
-                        FirstLangDefinition = "a car",
-                        SecondLangDefinition = "el coche",
-                        ImagePath = null,
-                        Level = 1,
-                        LessonId = l.Id
-                    });
-                    Assert.Fail("Exception with unique constraint violation should have been thrown");
-                }
 
-                catch (SQLiteException e)
-                {
-                    StringAssert.Contains(e.Message, "Constraint");
-                }
 
                 // Level null
                 try
@@ -196,7 +172,7 @@ namespace SpanglishTests
                 });
 
                 int i = db.Table<Word>().Where(w => w.LessonId == l.Id).Count();
-                Assert.AreEqual(2, i);
+                Assert.AreEqual(1, i);
             } 
         }
 
@@ -219,7 +195,7 @@ namespace SpanglishTests
                 {
                     UserId = u.Id,
                     WordId = w.Id,
-                    LastTimeChecked = DateTime.Now
+                    LastTimeCorrect = DateTime.Now
 
                 };
                 Assert.AreEqual(0, h.Correct);
