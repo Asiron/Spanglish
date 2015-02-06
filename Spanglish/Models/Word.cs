@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Spanglish.Models
 {
-    public class Word : ValidableObject
+    public class Word : ValidableObject, IEquatable<Word>
     {
 
         string _firstLangDefinition = null;
@@ -26,6 +26,7 @@ namespace Spanglish.Models
         {
             return new Word()
             {
+                Id = other.Id,
                 FirstLangDefinition = other.FirstLangDefinition,
                 SecondLangDefinition = other.SecondLangDefinition,
                 Level = other.Level,
@@ -102,6 +103,29 @@ namespace Spanglish.Models
             get
             { 
                 return !String.IsNullOrWhiteSpace(_imagePath);
+            }
+        }
+
+        public bool Equals(Word other)
+        {
+            return FirstLangDefinition == other.FirstLangDefinition &&
+                SecondLangDefinition == other.SecondLangDefinition &&
+                Level == other.Level &&
+                LessonId == other.LessonId;
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hash = 17;
+                // Suitable nullity checks etc, of course :)
+                hash = hash * 23 + this.Id.GetHashCode();
+                hash = hash * 23 + this.FirstLangDefinition.GetHashCode();
+                hash = hash * 23 + this.SecondLangDefinition.GetHashCode();
+                hash = hash * 23 + this.LessonId.GetHashCode();
+
+                return hash;
             }
         }
     }

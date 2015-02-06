@@ -25,7 +25,7 @@
         <DataTemplate DataType="{x:Type vm:TypingLessonViewModel}">
             <v:TypingLessonView />
         </DataTemplate>    
-        <DataTemplate DataType="{x:Type vm:SimpleLessonViewModel}">
+        <DataTemplate DataType="{x:Type vm:LessonModelView}">
             <v:SimpleLessonView />
         </DataTemplate>
     </Window.Resources>

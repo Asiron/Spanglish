@@ -219,11 +219,11 @@ namespace SpanglishTests
                 {
                     UserId = u.Id,
                     WordId = w.Id,
-                    LastTimeStudied = DateTime.Now
+                    LastTimeChecked = DateTime.Now
 
                 };
                 Assert.AreEqual(0, h.Correct);
-                Assert.AreEqual(0, h.Errors);
+                Assert.AreEqual(0, h.Wrong);
             }
         }
     }

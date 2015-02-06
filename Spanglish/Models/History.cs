@@ -9,11 +9,10 @@ namespace Spanglish.Models
 {
     public class History
     {
-        int _correct = 0;
-        int _errors  = 0;
-        /// <summary>
-        ///  TODO change password to hash
-        /// </summary>
+        private int _correct = 0;
+        private int _errors  = 0;
+        private int _skipped = 0;
+
 
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
@@ -24,10 +23,22 @@ namespace Spanglish.Models
         [NotNull]
         public int WordId { get; set; }
 
-        [NotNull]
-        public DateTime LastTimeStudied { get; set; }
+        public DateTime LastTimeCorrect { get; set; }
 
-        public int Errors
+        public static History CopyFrom(History other)
+        {
+            return new History()
+            {
+                Id = other.Id,
+                UserId = other.UserId,
+                WordId = other.WordId,
+                Correct = other.Correct,
+                LastTimeCorrect = other.LastTimeCorrect,
+                Wrong = other.Wrong,
+                Skipped = other.Skipped
+            };
+        }
+        public int Wrong
         {
             get
             {
@@ -59,10 +70,27 @@ namespace Spanglish.Models
             }
         }
 
+        public int Skipped
+        {
+            get
+            {
+                return _skipped;
+            }
+            set
+            {
+                if (value < 0)
+                {
+                    throw new ArgumentException("Skipped count cannot be negative!");
+                }
+                _skipped = value;
+            }
+        }
+
+        [Ignore]
         public int Total
         {
             get {
-                return Errors + Correct;
+                return Wrong + Correct + Skipped;
             }
         }
 

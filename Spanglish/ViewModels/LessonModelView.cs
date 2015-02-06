@@ -8,10 +8,11 @@ using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 using System.Windows.Threading;
 using System.Threading;
+using SQLite.Net;
 
 namespace Spanglish.ViewModels
 {
-    class SimpleLessonViewModel : ValidableObject, IBaseViewModel
+    class LessonModelView : ValidableObject, IBaseViewModel
     {
         public User CurrentUser { get; private set; }
         public RelayCommand RevertToPreviousViewModelCmd { get; private set; }
@@ -152,6 +153,7 @@ namespace Spanglish.ViewModels
         }
         public ObservableCollection<Word> LessonWords { set; get; }
         public ObservableCollection<Word> LessonWordsAll { set; get; }
+        public Dictionary<Word, History> CurrentUserLessonHistory { set; get; }
         public ObservableCollection<Word> CurrentWordsToChoose { set; get; }
         public Word CurrentWord
         {
@@ -159,7 +161,7 @@ namespace Spanglish.ViewModels
             set { _currentWord = value; OnPropertyChanged("CurrentWord"); }
         }
 
-        public SimpleLessonViewModel(User currentUser)
+        public LessonModelView(User currentUser)
         {
             CurrentUser = currentUser;
             RevertToPreviousViewModelCmd = new RelayCommand((p => ViewModelManager.Instance.ReturnToPreviousModel()));
@@ -175,6 +177,7 @@ namespace Spanglish.ViewModels
             Lessons = new ObservableCollection<Lesson>();
             LessonWords = new ObservableCollection<Word>();
             LessonWordsAll = new ObservableCollection<Word>();
+            CurrentUserLessonHistory = new Dictionary<Word, History>();
             CurrentWordsToChoose = new ObservableCollection<Word>();
 
             using(var db = Database.Instance.GetConnection())
@@ -200,18 +203,43 @@ namespace Spanglish.ViewModels
 
         private void FinishLesson()
         {
-            LessonFinishedText = "Finished in ";
             StopActualLesson();
+            ShowLessonPanel = false;
+            ShowResultPanel = true;
+            using (var db = Database.Instance.GetConnection())
+            {
+                foreach (var pair in CurrentUserLessonHistory)
+                {
+                    try
+                    {
+                        db.Delete<History>(pair.Value.Id);
+                    }
+                    catch (SQLiteException e)
+                    {
+                        Console.WriteLine(e.Message + " LOL");
+                    }
+                    db.Insert(History.CopyFrom(pair.Value));
+                }
+            }
+            CurrentUserLessonHistory[CurrentWord].Correct++;
+
+            LessonFinishedText = String.Format("Finished with {0:0.00}% accuracy", CorrectAnswers * 100 / TotalAnswers) ;
         }
 
         private bool CanSkipCurrentWord(object p)
         {
-            return LessonWords.Count() > 0;
+            return true;
         }
 
         private void SkipCurrentWord(object p)
         {
             SkippedAnswers++;
+            CurrentUserLessonHistory[CurrentWord].Skipped++;
+            if (IsFinished())
+            {
+                FinishLesson();
+                return;
+            }
             PrepareWord();
         }
 
@@ -222,19 +250,21 @@ namespace Spanglish.ViewModels
 
         private void AcceptCurrentWord(object p)
         {
+            if (CurrentWord.FirstLangDefinition.Equals(CurrentSelectedWord.FirstLangDefinition))
+            {
+                CorrectAnswers++;
+                CurrentUserLessonHistory[CurrentWord].LastTimeCorrect = DateTime.Now;
+                CurrentUserLessonHistory[CurrentWord].Correct++;
+            }
+            else
+            {
+                CurrentUserLessonHistory[CurrentWord].Wrong++;
+                WrongAnswers++;
+            }
             if (IsFinished())
             {
                 FinishLesson();
                 return;
-            }
-
-            if (CurrentWord.FirstLangDefinition.Equals(CurrentSelectedWord.SecondLangDefinition))
-            {
-                CorrectAnswers++;
-            }
-            else
-            {
-                WrongAnswers++;
             }
             PrepareWord();
         }
@@ -253,20 +283,39 @@ namespace Spanglish.ViewModels
 
         private void StartActualLesson()
         {
-            IsLessonRunning = true;
+            StartStopButtonText = "Stop";
+            ShowLessonPanel = true;
+            ShowResultPanel = true;
+            IsLessonRunning = true; 
+            LessonStartingTime = DateTime.Now;
+            LessonDispatcherTimer.Start();
             using(var db = Database.Instance.GetConnection())
             {
                 LessonWords.Clear();
                 LessonWordsAll.Clear();
+                CurrentUserLessonHistory.Clear();
                 foreach( Word w in db.Table<Word>().Where(w => w.LessonId == CurrentLesson.Id) )
                 {
                     LessonWords.Add(w);
                     LessonWordsAll.Add(w);
+                    var fetchedHistory = db.Table<History>().Where(h => h.UserId == CurrentUser.Id && h.WordId == w.Id);
+                    History wordHistory = null;
+                    if (fetchedHistory.Count() == 0) {
+                        Console.WriteLine("Word not found in history");
+                        wordHistory = new History() {UserId = CurrentUser.Id, WordId = w.Id};
+                    } else {
+                        Console.WriteLine("Word found in history");
+                        wordHistory = fetchedHistory.First();
+                        Console.WriteLine(String.Format("{0} {1} {2} {3}", w.FirstLangDefinition, wordHistory.Correct, wordHistory.Wrong, wordHistory.Skipped));
+
+                    }
+                    CurrentUserLessonHistory[w] = wordHistory;
                 }
-                LessonStartingTime = DateTime.Now;
-                LessonDispatcherTimer.Start();
             }
             PrepareWord();
+            CorrectAnswers = 0;
+            SkippedAnswers = 0;
+            WrongAnswers = 0;
         }
 
         private void PrepareWord()
@@ -280,12 +329,18 @@ namespace Spanglish.ViewModels
             if (LessonWords.Count > 0) {
                 CurrentWord = Word.CopyFrom(LessonWords[0]);
                 LessonWords.RemoveAt(0);
-                CurrentWordsToChoose.Add(CurrentWord);
+                if (!CurrentWordsToChoose.Contains(CurrentWord))
+                {
+                    CurrentWordsToChoose.Add(CurrentWord);
+                }
             }
         }
 
         private void StopActualLesson()
         {
+            StartStopButtonText = "Start";
+            ShowLessonPanel = false;
+            ShowResultPanel = false;
             IsLessonRunning = false;
             LessonDispatcherTimer.Stop();
             LessonFinishedText = "Finished in " + TimeElapsed;
@@ -295,18 +350,13 @@ namespace Spanglish.ViewModels
         {
             if (IsLessonRunning == false)
             {
-                StartStopButtonText = "Stop";
                 StartActualLesson();
             }
             else
             {
-                StartStopButtonText = "Start";
                 StopActualLesson();
             }
-            ShowLessonPanel ^= true;
-            ShowResultPanel ^= true;
             OnPropertyChanged("LessonTitle");
-
         }
 
         private string _startStopButtonText;
