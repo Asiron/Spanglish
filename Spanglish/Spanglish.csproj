@@ -76,10 +76,10 @@
     <Compile Include="Util\ViewModelManger.cs" />
     <Compile Include="Validators\IValidateInteger.cs" />
     <Compile Include="Validators\IValidateString.cs" />
+    <Compile Include="Validators\ValidateLanguageDefinitionService.cs" />
     <Compile Include="Validators\ValidateLevelService.cs" />
     <Compile Include="Validators\ValidateNewLoginService.cs" />
     <Compile Include="Validators\ValidateNewPasswordService.cs" />
-    <Compile Include="Validators\WordValidatotionRule.cs" />
     <Compile Include="ViewModels\CreateAccountViewModel.cs" />
     <Compile Include="ViewModels\CreateNewLessonsViewModel.cs" />
     <Compile Include="Util\ObservableObject.cs" />

@@ -149,13 +149,37 @@
                             </DataGrid.RowValidationRules>
 
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="First Language Defintion" Width="5*" IsReadOnly="False">
+                                
+                                <DataGridTextColumn Header="First language name" Width="5*" IsReadOnly="False">
+                                    <DataGridTextColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <StackPanel>
+                                                <TextBlock Text="{Binding Content, RelativeSource={RelativeSource Mode=TemplatedParent}}" Margin="5"/>
+                                                <TextBox BorderBrush="Green" BorderThickness="1" Margin="5" Text="{Binding UpdateSourceTrigger=PropertyChanged,
+                                                    ValidatesOnNotifyDataErrors=True,
+                                                    RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}},
+                                                    Path=DataContext.LessonFirstLangDef}"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTextColumn.HeaderTemplate>
                                     <DataGridTextColumn.Binding>
                                         <Binding Path="FirstLangDefinition" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" >
                                         </Binding>
                                     </DataGridTextColumn.Binding>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Header="Second Language Defintion" Width="5*" IsReadOnly="False">
+
+                                <DataGridTextColumn Header="Second language name" Width="5*" IsReadOnly="False">
+                                    <DataGridTextColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <StackPanel>
+                                                <TextBlock Text="{Binding Content, RelativeSource={RelativeSource Mode=TemplatedParent}}" Margin="5"/>
+                                                <TextBox BorderBrush="Green" BorderThickness="1" Margin="5" Text="{Binding UpdateSourceTrigger=PropertyChanged, 
+                                                    ValidatesOnNotifyDataErrors=True,
+                                                    RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}},
+                                                    Path=DataContext.LessonSecondLangDef}"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTextColumn.HeaderTemplate>
                                     <DataGridTextColumn.Binding>
                                         <Binding Path="SecondLangDefinition" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged"/>
                                     </DataGridTextColumn.Binding>

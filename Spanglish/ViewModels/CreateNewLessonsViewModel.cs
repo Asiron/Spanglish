@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Spanglish.Validators;
 
 namespace Spanglish.ViewModels
 {
@@ -21,9 +22,6 @@ namespace Spanglish.ViewModels
         public RelayCommand SaveLessonCmd { set; get; }
         public User CurrentUser { set; get; }
 
-        private ValidationPredicate _newLessonValidationService;
-
-        private bool _showModifyLessonSubView;
         public bool ShowModifyLessonSubView
         {
             get { return _showModifyLessonSubView; }
@@ -34,7 +32,6 @@ namespace Spanglish.ViewModels
             }
         }
 
-        private string _newLessonName;
         public string NewLessonName
         { 
             set
@@ -45,7 +42,6 @@ namespace Spanglish.ViewModels
             get { return _newLessonName; }
         }
 
-        private Lesson _currentLesson;
         public Lesson CurrentLesson
         {
             set
@@ -58,7 +54,6 @@ namespace Spanglish.ViewModels
         public Lesson PreviousLesson { set; get; }
         public ObservableCollection<Lesson> Lessons { set; get; }
 
-        private ObservableCollection<Word> _currentLessonWords;
         public ObservableCollection<Word> CurrentLessonWords
         {
             get { return _currentLessonWords; }
@@ -68,7 +63,7 @@ namespace Spanglish.ViewModels
                 OnPropertyChanged("CurrentLessonWords");
             }
         }
-        private Word _currentEditingWord;
+
         public Word CurrentEditingWord
         {
             get { return _currentEditingWord;  }
@@ -78,6 +73,31 @@ namespace Spanglish.ViewModels
                 OnPropertyChanged("CurrentEditingWord");
             }
         }
+
+        public String LessonFirstLangDef
+        {
+            get { return _lessonFirstLangDef; }
+            set
+            {
+                _lessonFirstLangDef = value;
+                OnPropertyChanged("LessonFirstLangDef");
+                ValidateProperty("LessonFirstLangDef", _lessonFirstLangDef,
+                    (p) => _langNameValidationService.ValidateString(_lessonFirstLangDef));
+            }
+        }
+
+        public String LessonSecondLangDef
+        {
+            get { return _lessonSecondLangDef; }
+            set
+            {
+                _lessonSecondLangDef = value;
+                OnPropertyChanged("LessonSecondLangDef");
+                ValidateProperty("LessonSecondLangDef", _lessonSecondLangDef,
+                    (p) => _langNameValidationService.ValidateString(_lessonSecondLangDef));
+            }
+        }
+
 
         public CreateNewLessonsViewModel(User currentUser)
         {
@@ -97,7 +117,7 @@ namespace Spanglish.ViewModels
                     Lessons.Add(lesson);
                 }
             }
-
+            _langNameValidationService = new ValidateLanguageDefinitionService();
             _newLessonValidationService = (p) =>
             {
                 var ret = new List<string>();
@@ -113,10 +133,10 @@ namespace Spanglish.ViewModels
 
                 return ret;
             };
+
             ShowModifyLessonSubView = false;
             CurrentLessonWords = new ObservableCollection<Word>();
             CurrentEditingWord = new Word() {};
-            CurrentLessonWords.CollectionChanged += CurrentLessonWords_CollectionChanged;
         }
 
         private bool CanSaveLesson()
@@ -154,27 +174,13 @@ namespace Spanglish.ViewModels
 
             return CurrentEditingWord != null &&  !String.IsNullOrWhiteSpace(CurrentEditingWord.FirstLangDefinition) &&
                 !String.IsNullOrWhiteSpace(CurrentEditingWord.SecondLangDefinition) &&
-                CurrentEditingWord.Level != null && !CurrentEditingWord.HasErrors;
+                CurrentEditingWord.Level != null && !CurrentEditingWord.HasErrors && !HasErrors;
         }
 
         private void AddNewWordToLesson()
         {
-            CurrentLessonWords.Add(new Word()
-            {
-                FirstLangDefinition = CurrentEditingWord.FirstLangDefinition,
-                SecondLangDefinition = CurrentEditingWord.SecondLangDefinition,
-                Level = CurrentEditingWord.Level,
-                LessonId = CurrentLesson.Id
-            });
-        }
-
-        void CurrentLessonWords_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-           // Console.WriteLine("COllection changed");
-            using(var db = Database.Instance.GetConnection())
-            {
-
-            }
+            CurrentLessonWords.Add(Word.CopyFrom(CurrentEditingWord));
+           
         }
 
         private void ShowLesson()
@@ -189,90 +195,13 @@ namespace Spanglish.ViewModels
                 {
                     CurrentLessonWords.Add(word);
                 }
-                CurrentLessonWords.CollectionChanged += CurrentLessonWords_CollectionChanged;
                 CurrentEditingWord = new Word();
                 OnPropertyChanged("CurrentEditingWord");
                 OnPropertyChanged("CurrentLessonWords");
                 OnPropertyChanged("CurrentLesson");
             }
         }
-        /*
-        private void SaveLessons(Lesson lessonToSave)
-        {
-            Console.WriteLine("Begin");
-            if (lessonToSave == null)
-            {
-                Console.WriteLine("Previous null, returning");
-                return;
-            }
-            Console.WriteLine("Saving " + lessonToSave.Name);
-
-            try
-            {
-                using (var db = Database.Instance.GetConnection())
-                {
-                    var lessonToSaveInDatabase = db.Table<Lesson>().Where(l => l.UserId == CurrentUser.Id && l.Name == lessonToSave.Name);
-                    if (lessonToSaveInDatabase.Count() == 0)
-                    {
-                        db.Insert(new Lesson() { Name = lessonToSave.Name, UserId = CurrentUser.Id });
-                    }
-                    int lessonToSaveInDatabaseId = db.Table<Lesson>().Where(l => l.UserId == CurrentUser.Id && l.Name == lessonToSave.Name).First().Id;
-                    Console.WriteLine(lessonToSaveInDatabaseId);
-                    //db.RunInTransaction(() =>
-                  //  {
-                        try
-                        {
-                            //db.InsertOrReplaceAll(CurrentLessonWords.Where(w => w.IsModified));
-                            foreach (var word in CurrentLessonWords.Where(w => w.IsModified))
-                            {
-                                db.InsertOrReplace(word);
-                                Console.WriteLine("modified " + word.FirstLangDefinition);
-                            }
-                            foreach (var word in CurrentLessonWords.Where(w => !w.IsModified))
-                            {
-                                Console.WriteLine("not modified " + word.FirstLangDefinition);
-                                word.IsModified = true;
-                                word.LessonId = lessonToSaveInDatabaseId;
-                                db.Insert(word);
-                                Console.WriteLine(String.Format("{0} {1} {2} - Lesson {3}", word.FirstLangDefinition, word.SecondLangDefinition, word.Level, lessonToSaveInDatabaseId));
-                                
-                                int b = db.InsertOrReplace( new Word()
-                                {
-                                    FirstLangDefinition = word.FirstLangDefinition,
-                                    SecondLangDefinition = word.SecondLangDefinition,
-                                    LessonId = previousLessonInDatabaseId,
-                                    Level = word.Level
-                                });
-                                
-                                //Console.WriteLine(b);
-                                Console.WriteLine("Before check");
-                                foreach (var word1 in db.Table<Word>().Where(w => w.LessonId == lessonToSaveInDatabaseId))
-                                {
-                                    Console.WriteLine(String.Format("{0} {1} {2} - Lesson {3}", word1.FirstLangDefinition, word1.SecondLangDefinition, word1.Level, word1.LessonId));
-                                }
-                                Console.WriteLine("After check");
-                            }
-                        }
-                        catch (SQLiteException e)
-                        {
-                            Console.WriteLine(e.Message + "KUPA");
-                        }
-                   // });
-                    Console.WriteLine(" -- ");
-                    foreach(var word in db.Table<Word>().Where(w => w.LessonId == lessonToSaveInDatabaseId))
-                    {
-                        Console.WriteLine(String.Format("{0} {1} {2} - Lesson {3}", word.FirstLangDefinition, word.SecondLangDefinition, word.Level, word.LessonId));
-                    }
-                }
-
-            }
-            catch (SQLiteException e)
-            {
-                Console.WriteLine(e.Message + "DUPA");
-            }
-            Console.WriteLine("End");
-        }
-        */
+        
         private bool CanStartAddingNewLesson()
         {
             return !HasErrors && !String.IsNullOrWhiteSpace(NewLessonName);
@@ -290,8 +219,19 @@ namespace Spanglish.ViewModels
 
             OnPropertyChanged("CurrentLesson");
             CurrentLessonWords = new ObservableCollection<Word>();
-            CurrentLessonWords.CollectionChanged += CurrentLessonWords_CollectionChanged;
             ShowModifyLessonSubView = true;
         }
+
+        private Word _currentEditingWord;
+        private string _lessonFirstLangDef;
+        private string _lessonSecondLangDef;
+        private bool _showModifyLessonSubView;
+
+        private string _newLessonName;
+        private Lesson _currentLesson;
+
+        private ValidationPredicate _newLessonValidationService;
+        private ObservableCollection<Word> _currentLessonWords;
+        private readonly IValidateString _langNameValidationService;
     } 
 }
