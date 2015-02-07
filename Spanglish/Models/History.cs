@@ -110,6 +110,7 @@ namespace Spanglish.Models
                 return Wrong + Correct + Skipped;
             }
         }
+
         [Ignore]
         public float Accuracy
         {
