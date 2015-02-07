@@ -9,6 +9,13 @@ using System.Threading.Tasks;
 
 namespace Spanglish.Models 
 {
+     /*
+      * Lesson represents data about a particular lesson,
+      * It keeps name and a user id that created this lesson.
+      * It also holds information about first and second language definition.
+      * Therfore, user can different dictionaries, not only tied to 2 pre-defined languages.
+      * Words have reference to one lesson. Therefore we can group words by lesson id.
+      */
     public class Lesson : ValidableObject, IEquatable<Lesson>
     {
 

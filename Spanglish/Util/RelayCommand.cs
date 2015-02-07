@@ -7,6 +7,9 @@ using System.Windows.Input;
 
 namespace Spanglish.Util
 {
+    /*
+     * Implementation of ICommand interface, for the purpose of maintaining MVVM pattern
+     */
     public class RelayCommand : ICommand
     {
         readonly Action<object> _executeAction;

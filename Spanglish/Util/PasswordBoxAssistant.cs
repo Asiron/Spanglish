@@ -8,6 +8,11 @@ using System.Windows.Controls;
 
 namespace Spanglish.Util
 {
+    /*
+     * Class for making it possible to bind PasswordBox to a DependencyProperty
+     * I know that it's not a good idea to bind it and store password in plaintext in memory,
+     * but for the purpose of this simple application, passwords are stored in plaintext both in memory and in database
+     */
     public static class PasswordBoxAssistant
     {
         public static readonly DependencyProperty BoundPassword =
@@ -23,14 +28,11 @@ namespace Spanglish.Util
         {
             PasswordBox box = d as PasswordBox;
 
-            // only handle this event when the property is attached to a PasswordBox
-            // and when the BindPassword attached property has been set to true
             if (d == null || !GetBindPassword(d))
             {
                 return;
             }
 
-            // avoid recursive updating by ignoring the box's changed event
             box.PasswordChanged -= HandlePasswordChanged;
 
             string newPassword = (string)e.NewValue;
@@ -45,8 +47,6 @@ namespace Spanglish.Util
 
         private static void OnBindPasswordChanged(DependencyObject dp, DependencyPropertyChangedEventArgs e)
         {
-            // when the BindPassword attached property is set on a PasswordBox,
-            // start listening to its PasswordChanged event
 
             PasswordBox box = dp as PasswordBox;
 
@@ -72,10 +72,7 @@ namespace Spanglish.Util
         private static void HandlePasswordChanged(object sender, RoutedEventArgs e)
         {
             PasswordBox box = sender as PasswordBox;
-
-            // set a flag to indicate that we're updating the password
             SetUpdatingPassword(box, true);
-            // push the new password into the BoundPassword property
             SetBoundPassword(box, box.Password);
             SetUpdatingPassword(box, false);
         }

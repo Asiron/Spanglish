@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Spanglish.Util
 {
+    /*
+     * Different constants used for validation and paths to database
+     */
     public static class Constants
     {
         public const int MinUsernameLength = 4;

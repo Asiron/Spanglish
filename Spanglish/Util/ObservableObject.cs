@@ -6,6 +6,9 @@ using System.Text;
 
 namespace Spanglish.Util
 {
+    /*
+     * Implementation of INotifyPropertyChanged interface, for the purpose of maintaining MVVM pattern.
+     */
     public abstract class ObservableObject : INotifyPropertyChanged
     {
         public virtual void RaisePropertyChanged(string propertyName)

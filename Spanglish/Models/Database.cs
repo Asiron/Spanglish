@@ -11,6 +11,10 @@ using Spanglish.Util;
 
 namespace Spanglish.Models
 {
+    /*
+     * Database object, handles connection to the database
+     * and is implemented with Singleton pattern, yes I know it's an antipattern
+     */ 
     public class Database : Singleton<Database>
     {
         public string Filename { get; set; }

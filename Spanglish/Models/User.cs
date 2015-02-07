@@ -8,6 +8,12 @@ using System.Threading.Tasks;
 
 namespace Spanglish.Models
 {
+    /*
+     * User class holds information about the user.
+     * It stores user's name, login and password
+     * and is used to tie him to lessons and statistics
+     * 
+     */
     public class User
     {
         [PrimaryKey, AutoIncrement]

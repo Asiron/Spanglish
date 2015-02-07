@@ -4,6 +4,12 @@ using System.Windows.Data;
 
 namespace Spanglish.Util
 {
+
+    /*
+     * Inverted Bool To Visivility Converter
+     * Does the same job as system provided bool to visibility converter, however it inverts the result.
+     * Used for binding bool variable to visibility dependency property.
+     */
     [ValueConversion(typeof(bool), typeof(bool))]
     public class InvertedBoolToVisibilityConverter : IValueConverter
     {

@@ -11,6 +11,12 @@ using System.Threading.Tasks;
 
 namespace Spanglish.Models
 {
+    /*
+     * Word represents a pair of words, that have the same meaning in
+     * two languages. It also holds information about level. 
+     * It also has a reference to a lesson. Therefore, 
+     * lessons can contain as many number of word translations as they want.
+     */
     public class Word : ValidableObject, IEquatable<Word>
     {
         public Word()

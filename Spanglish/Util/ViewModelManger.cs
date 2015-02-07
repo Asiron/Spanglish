@@ -7,11 +7,12 @@ using System.Threading.Tasks;
 
 namespace Spanglish.Util
 {
+    /*
+     * ViewModelManager is reponsible for handling viewmodels using typical stack implementation
+     * 
+     */
     public class ViewModelManager : Singleton<ViewModelManager>, INotifyPropertyChanged
     {
-
-        private Stack<IBaseViewModel> _viewModels;
-
         public ViewModelManager()
         {
             _viewModels = new Stack<IBaseViewModel>();
@@ -23,7 +24,6 @@ namespace Spanglish.Util
             set
             {
                 _viewModels.Push(value);
-                //value.OnViewActivate();
                 OnPropertyChanged();
             }
         }
@@ -31,7 +31,6 @@ namespace Spanglish.Util
         public void ReturnToPreviousModel()
         {
             _viewModels.Pop();
-            //CurrentModel.OnViewActivate();
             OnPropertyChanged();
         }
 
@@ -40,7 +39,13 @@ namespace Spanglish.Util
         protected virtual void OnPropertyChanged(string propertyName = null)
         {
             PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
+
+        private Stack<IBaseViewModel> _viewModels;
+
     }
 }

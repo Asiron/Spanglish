@@ -9,11 +9,12 @@ using Spanglish.ViewModels;
 
 namespace Spanglish.Util
 {
+    /*
+     * Implementation of INotifyDataErrorInfo interaface,
+     * for the purpose of validating data under multiple criteria
+     */
     public abstract class ValidableObject : ObservableObject, INotifyDataErrorInfo
     {
-        
-        private readonly Dictionary<string, ICollection<string>> _validationErrors = new Dictionary<string,ICollection<string>>();
-
         public delegate ICollection<string> ValidationPredicate(object value);
         public ValidationPredicate SimpleValidationPredicate(string errorString, Predicate<object> predicate)
         {
@@ -47,15 +48,17 @@ namespace Spanglish.Util
         private void RaiseErrorsChanged(string propertyName)
         {
             if (ErrorsChanged != null)
+            {
                 ErrorsChanged(this, new DataErrorsChangedEventArgs(propertyName));
+            }
         }
 
         public IEnumerable GetErrors(string propertyName)
         {
-            if (string.IsNullOrEmpty(propertyName)
-            || !_validationErrors.ContainsKey(propertyName))
+            if (string.IsNullOrEmpty(propertyName) || !_validationErrors.ContainsKey(propertyName))
+            {
                 return null;
-
+            }
             return _validationErrors[propertyName];
         }
 
@@ -63,5 +66,7 @@ namespace Spanglish.Util
         {
             get { return _validationErrors.Count > 0; }
         }
+
+        private readonly Dictionary<string, ICollection<string>> _validationErrors = new Dictionary<string, ICollection<string>>();
     }
 }

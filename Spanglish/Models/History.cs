@@ -7,6 +7,13 @@ using System.Threading.Tasks;
 
 namespace Spanglish.Models
 {
+    /*
+     * History keeps track of users progress on particular word
+     * It is tied to a lesson and a user. It keeps information about
+     * number of correct, incorrect and skipped answers as well as 
+     * last timestamp of correctly guessing the word
+     * 
+     */
     public class History
     {
 
