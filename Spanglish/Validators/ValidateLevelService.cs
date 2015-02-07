@@ -8,6 +8,12 @@ using System.Windows.Controls;
 
 namespace Spanglish.Validators
 {
+    /*
+     * Validates level of a single word
+     *
+     * Level cannot be empty and has to be within the boundries defined in Constants
+     * 
+     */
     public class ValidateLevelService : IValidateInteger
     {
         public ICollection<string> ValidateInteger(int? value)

@@ -8,6 +8,13 @@ using System.Threading.Tasks;
 
 namespace Spanglish.Validators
 {
+    /*
+     * Validates Language definition of a dictionary
+     *
+     * Language name length cannot extend the boundries defined in Constants
+     * It has to start with capital letter and follow with small letters
+     * 
+     */
     public class ValidateLanguageDefinitionService : IValidateString 
     {
         public ICollection<string> ValidateString(string lang)

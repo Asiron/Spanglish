@@ -9,6 +9,14 @@ using System.Threading.Tasks;
 
 namespace Spanglish.Validators
 {
+    /*
+     * Validates new login of a user
+     *
+     * User's login has to be unique, it cannot be in database already
+     * It has have its length between boundries defined in Constants
+     * Can only contain upper and lower case letters
+     * 
+     */
     public class ValidateNewLoginService : IValidateString
     {
         public ICollection<string> ValidateString(string login)

@@ -7,6 +7,13 @@ using System.Text.RegularExpressions;
 
 namespace Spanglish.Validators
 {
+    /*
+     * Validates new name of a user
+     *
+     * User's new name has to have its length within boundries defined in Constants
+     * It must have first and last name, seperated with white spaces
+     * and each part has to start with capital letter, followed by at least one small letter
+     */
     class ValidateNewNameService : IValidateString
     {
         public ICollection<string> ValidateString(string name)

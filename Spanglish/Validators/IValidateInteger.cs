@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Spanglish.Validators
 {
+    /*
+     * IValidateInteger interface, returns ICollection of errors from int
+     */
     interface IValidateInteger
     {
         ICollection<string> ValidateInteger(int? val);

@@ -8,6 +8,12 @@ using System.Threading.Tasks;
 
 namespace Spanglish.Validators
 {
+    /*
+     * Validates new passowrd of a user 
+     *
+     * Password has have its length within the boundries defined in Constants
+     * 
+     */
     public class ValidateNewPasswordService : IValidateString
     {
         public ICollection<string> ValidateString(string password)
