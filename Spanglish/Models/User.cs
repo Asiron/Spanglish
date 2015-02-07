@@ -10,9 +10,6 @@ namespace Spanglish.Models
 {
     public class User
     {
-        string _name = null;
-        string _login = null;
-
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
 
@@ -46,5 +43,8 @@ namespace Spanglish.Models
             get;
             set;
         }
+
+        string _name = null;
+        string _login = null;
     }
 }

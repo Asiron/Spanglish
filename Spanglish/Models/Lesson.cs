@@ -11,11 +11,6 @@ namespace Spanglish.Models
 {
     public class Lesson : ValidableObject, IEquatable<Lesson>
     {
-        string _name = null;
-        private string _firstLangName;
-        private string _secondLangName;
-
-        private readonly IValidateString _langNameValidatorService;
 
         public Lesson()
         {
@@ -42,7 +37,6 @@ namespace Spanglish.Models
         }
 
         [NotNull, MaxLength(Constants.MaxLangNameLength)]
-
         public String SecondLangName
         {
             get { return _secondLangName; }
@@ -73,5 +67,11 @@ namespace Spanglish.Models
             return Name == other.Name &&
                 UserId == other.UserId;
         }
+
+        private string _name = null;
+        private string _firstLangName;
+        private string _secondLangName;
+
+        private readonly IValidateString _langNameValidatorService;
     }
 }

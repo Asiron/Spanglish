@@ -9,10 +9,6 @@ namespace Spanglish.Models
 {
     public class History
     {
-        private int _correct = 0;
-        private int _errors  = 0;
-        private int _skipped = 0;
-        private History historyEntry;
 
         public History(History historyEntry)
         {
@@ -25,9 +21,7 @@ namespace Spanglish.Models
             Skipped = historyEntry.Skipped;
         }
 
-        public History()
-        {
-        }
+        public History() {}
 
 
         [PrimaryKey, AutoIncrement]
@@ -109,12 +103,16 @@ namespace Spanglish.Models
                 return Wrong + Correct + Skipped;
             }
         }
-
+        [Ignore]
         public float Accuracy
         {
             get {
                 return Correct / (float)(Total);
             }
         }
+
+        private int _correct = 0;
+        private int _errors = 0;
+        private int _skipped = 0;
     }
 }

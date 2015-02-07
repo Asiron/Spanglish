@@ -13,14 +13,10 @@ namespace Spanglish.Models
 {
     public class Word : ValidableObject, IEquatable<Word>
     {
-
-        string _firstLangDefinition = null;
-        string _secondLangDefinition = null;
-        string _imagePath = null;
-        byte? _level = null;
-        int? _lessonId = null;
-
-        private readonly IValidateInteger _levelValidationService;
+        public Word()
+        {
+            _levelValidationService = new ValidateLevelService();
+        }
 
         public static Word CopyFrom(Word other)
         {
@@ -32,11 +28,6 @@ namespace Spanglish.Models
                 Level = other.Level,
                 LessonId = other.LessonId
             };
-        }
-
-        public Word()
-        {
-            _levelValidationService = new ValidateLevelService();
         }
 
         [PrimaryKey, AutoIncrement]
@@ -68,13 +59,6 @@ namespace Spanglish.Models
             }
         }
 
-        [MaxLength(80)]
-        public string ImagePath
-        {
-            get { return _imagePath; }
-            set { _imagePath = value; }
-        }
-
         [NotNull]
         public int? LessonId
         {
@@ -97,15 +81,6 @@ namespace Spanglish.Models
             }
         }
 
-        [Ignore]
-        public bool HasImage
-        {
-            get
-            { 
-                return !String.IsNullOrWhiteSpace(_imagePath);
-            }
-        }
-
         public bool Equals(Word other)
         {
             return FirstLangDefinition == other.FirstLangDefinition &&
@@ -119,14 +94,20 @@ namespace Spanglish.Models
             unchecked
             {
                 int hash = 17;
-                // Suitable nullity checks etc, of course :)
                 hash = hash * 23 + this.Id.GetHashCode();
                 hash = hash * 23 + this.FirstLangDefinition.GetHashCode();
                 hash = hash * 23 + this.SecondLangDefinition.GetHashCode();
                 hash = hash * 23 + this.LessonId.GetHashCode();
-
                 return hash;
             }
         }
+
+        string _firstLangDefinition = null;
+        string _secondLangDefinition = null;
+        string _imagePath = null;
+        byte? _level = null;
+        int? _lessonId = null;
+
+        private readonly IValidateInteger _levelValidationService;
     }
 }

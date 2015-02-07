@@ -13,19 +13,7 @@ namespace Spanglish.Models
 {
     public class Database : Singleton<Database>
     {
-        private string _filename;
-
-        public string Filename
-        {
-            get
-            {
-                return _filename;
-            }
-            set
-            {
-                _filename = value;
-            }
-        }
+        public string Filename { get; set; }
 
         public Database() : this(Constants.ProductionDatabasePath)
         {
