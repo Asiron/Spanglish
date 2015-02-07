@@ -12,9 +12,12 @@ namespace Spanglish.ViewModels
     {
         public User CurrentUser { get; private set; }
 
+        public RelayCommand RevertToPreviousViewModelCmd { get; private set; }
+
+
         public StatisticsViewModel(User currentUser)
         {
-            // TODO: Complete member initialization
+            RevertToPreviousViewModelCmd = new RelayCommand((p => ViewModelManager.Instance.ReturnToPreviousModel()));
             CurrentUser = currentUser;
         }
     }

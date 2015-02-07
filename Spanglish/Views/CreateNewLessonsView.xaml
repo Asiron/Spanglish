@@ -17,6 +17,7 @@
             <Setter Property="Background" Value="GhostWhite"></Setter>
             <Setter Property="Margin" Value="10"></Setter>
         </Style>
+        
         <!-- DataGrid Background -->
         <LinearGradientBrush x:Key="BlueLightGradientBrush" StartPoint="0,0" EndPoint="0,1">
             <GradientStop Offset="0" Color="#FFEAF3FF"/>
@@ -39,7 +40,6 @@
         
         <!-- Row Style-->
         <Style x:Key="RowStyle" TargetType="{x:Type DataGridRow}">
-            <!--<Setter Property="Margin" Value="4"/>-->
             <Style.Triggers>
                 <Trigger Property="Validation.HasError" Value="true">
                     <Setter Property="BorderThickness" Value="1"/>
@@ -89,7 +89,11 @@
                             <RowDefinition Height="0.70*"></RowDefinition>
                         </Grid.RowDefinitions>
                         <TextBlock Grid.Row="0" Text="Lessons" FontWeight="Bold" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                        <ListView Grid.Row="1" ItemsSource="{Binding Lessons}" SelectedItem="{Binding CurrentLesson}" >
+                        <ListView Grid.Row="1" 
+                                  ItemsSource="{Binding Lessons}"
+                                  SelectedItem="{Binding CurrentLesson}"
+                                  ScrollViewer.CanContentScroll="False"
+                                  HorizontalContentAlignment="Stretch">
                             <ListView.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <StackPanel Orientation="Vertical"/>
@@ -97,20 +101,28 @@
                             </ListView.ItemsPanel>
                             <ListView.ItemTemplate>
                                 <DataTemplate>
-                                    <Grid Margin="2">
-                                        <Grid.InputBindings>
-                                            <MouseBinding Gesture="LeftDoubleClick"  Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}, Path=DataContext.ShowLessonCmd}"/>
-                                        </Grid.InputBindings>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition/>
-                                            <RowDefinition/>
-                                        </Grid.RowDefinitions>
-                                        <TextBlock Grid.Row="1" Text="{Binding Name}" />
+                                    <Grid >
+                                        <Grid.Width>
+                                            <Binding Path="Width"
+                                                     RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}" />
+                                        </Grid.Width>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="3*"/>
+                                            <ColumnDefinition Width="1*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock  Grid.Column="0" Text="{Binding Name}">
+                                            <TextBlock.InputBindings>
+                                                <MouseBinding Gesture="LeftDoubleClick" Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}, Path=DataContext.ShowLessonCmd}"/>
+                                            </TextBlock.InputBindings>
+                                        </TextBlock>
+                                        <Button Grid.Column="1" 
+                                                Content="x" 
+                                                Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}, Path=DataContext.DeleteSelectedLessonCmd}" CommandParameter="{Binding Name}"/>
                                     </Grid>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>
-                        <TextBox Grid.Row="2" Margin="10,10,10,20" Name="tbEnterNewLessonName" Text="{Binding Path=NewLessonName, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}">
+                        <TextBox Grid.Row="2" Margin="10,10,10,20" Name="tbEnterNewLessonName" Text="{Binding Path=NewLessonName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, ValidatesOnDataErrors=True}">
                             <Validation.ErrorTemplate>
                                 <ControlTemplate>
                                     <StackPanel>
@@ -158,7 +170,7 @@
                                                 <TextBox BorderBrush="Green" BorderThickness="1" Margin="5" Text="{Binding UpdateSourceTrigger=PropertyChanged,
                                                     ValidatesOnNotifyDataErrors=True,
                                                     RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}},
-                                                    Path=DataContext.LessonFirstLangDef}"/>
+                                                    Path=DataContext.CurrentLesson.FirstLangName}"/>
                                             </StackPanel>
                                         </DataTemplate>
                                     </DataGridTextColumn.HeaderTemplate>
@@ -176,7 +188,7 @@
                                                 <TextBox BorderBrush="Green" BorderThickness="1" Margin="5" Text="{Binding UpdateSourceTrigger=PropertyChanged, 
                                                     ValidatesOnNotifyDataErrors=True,
                                                     RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}},
-                                                    Path=DataContext.LessonSecondLangDef}"/>
+                                                    Path=DataContext.CurrentLesson.SecondLangName}"/>
                                             </StackPanel>
                                         </DataTemplate>
                                     </DataGridTextColumn.HeaderTemplate>

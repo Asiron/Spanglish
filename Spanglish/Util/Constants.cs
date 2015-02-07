@@ -18,6 +18,7 @@ namespace Spanglish.Util
         public const int MaxLangNameLength = 10;
         public const int MaxWordLevel = 10;
         public const int MinLessonNameLength = 2;
+        public const int MaxLessonNameLength = 10;
         public const string PathToRoot = "../../../";
         public const string DatabaseFileFolder = "database";
         public const string ImageFolder = "database/images";

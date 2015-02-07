@@ -20,6 +20,7 @@ namespace Spanglish.ViewModels
         public RelayCommand ShowLessonCmd { set; get; }
         public RelayCommand AddNewWordToLessonCmd { set; get; }
         public RelayCommand SaveLessonCmd { set; get; }
+        public RelayCommand DeleteSelectedLessonCmd { set; get; }
         public User CurrentUser { set; get; }
 
         public bool ShowModifyLessonSubView
@@ -37,6 +38,7 @@ namespace Spanglish.ViewModels
             set
             {
                 _newLessonName = value;
+                OnPropertyChanged("NewLessonName");
                 ValidateProperty("NewLessonName", _newLessonName, _newLessonValidationService);
             }
             get { return _newLessonName; }
@@ -44,15 +46,15 @@ namespace Spanglish.ViewModels
 
         public Lesson CurrentLesson
         {
+            get { return _currentLesson; }
             set
             {
-                PreviousLesson = _currentLesson;
                 _currentLesson = value;
+                OnPropertyChanged("CurrentLesson");
             }
-            get { return _currentLesson; }
         }
-        public Lesson PreviousLesson { set; get; }
         public ObservableCollection<Lesson> Lessons { set; get; }
+        public bool CurrentLessonWordsChanged { get; set; }
 
         public ObservableCollection<Word> CurrentLessonWords
         {
@@ -74,31 +76,6 @@ namespace Spanglish.ViewModels
             }
         }
 
-        public String LessonFirstLangDef
-        {
-            get { return _lessonFirstLangDef; }
-            set
-            {
-                _lessonFirstLangDef = value;
-                OnPropertyChanged("LessonFirstLangDef");
-                ValidateProperty("LessonFirstLangDef", _lessonFirstLangDef,
-                    (p) => _langNameValidationService.ValidateString(_lessonFirstLangDef));
-            }
-        }
-
-        public String LessonSecondLangDef
-        {
-            get { return _lessonSecondLangDef; }
-            set
-            {
-                _lessonSecondLangDef = value;
-                OnPropertyChanged("LessonSecondLangDef");
-                ValidateProperty("LessonSecondLangDef", _lessonSecondLangDef,
-                    (p) => _langNameValidationService.ValidateString(_lessonSecondLangDef));
-            }
-        }
-
-
         public CreateNewLessonsViewModel(User currentUser)
         {
             CurrentUser = currentUser;
@@ -109,6 +86,7 @@ namespace Spanglish.ViewModels
             DeleteSelectedWordCmd = new RelayCommand((p) => CurrentLessonWords.Remove(CurrentEditingWord), 
                 (p) => CurrentEditingWord != null && CurrentLessonWords.Count() > 1);
             AddNewWordToLessonCmd = new RelayCommand((p) => AddNewWordToLesson(), (p) => CanAddNewWordToLesson());
+            DeleteSelectedLessonCmd = new RelayCommand((p) => DeleteSelectedLesson(p), (p) => CanDeleteSelectedLesson(p));
             using (var db = Database.Instance.GetConnection())
             {
                 Lessons = new ObservableCollection<Lesson>();
@@ -118,6 +96,7 @@ namespace Spanglish.ViewModels
                 }
             }
             _langNameValidationService = new ValidateLanguageDefinitionService();
+            
             _newLessonValidationService = (p) =>
             {
                 var ret = new List<string>();
@@ -128,8 +107,9 @@ namespace Spanglish.ViewModels
                 }
                 if (count >= 1 || (CurrentLesson != null && CurrentLesson.Name.Equals(p as string)))
                     ret.Add("Lesson name has to be unique");
-                else if ((p as string).Length < 4)
-                    ret.Add("Lesson name has to be longer than 4");
+                else if ((p as string).Length < Constants.MinLessonNameLength ||
+                    (p as string).Length > Constants.MaxLessonNameLength)
+                    ret.Add(String.Format("Length has to be between {0} and {1}", Constants.MinLessonNameLength, Constants.MaxLessonNameLength));
 
                 return ret;
             };
@@ -137,17 +117,59 @@ namespace Spanglish.ViewModels
             ShowModifyLessonSubView = false;
             CurrentLessonWords = new ObservableCollection<Word>();
             CurrentEditingWord = new Word() {};
+
+            CurrentLessonWords.CollectionChanged += CurrentLessonWords_CollectionChanged;
+            CurrentLessonWordsChanged = false;
+        }
+
+        private bool CanDeleteSelectedLesson(object p)
+        {
+            return p != null && CurrentLesson != null && !CurrentLesson.Name.Equals(p as string);
+        }
+
+        private void DeleteSelectedLesson(object p)
+        {
+            Lesson lessonToRemove = Lessons.Where(l => l.Name.Equals(p as string)).First();
+            Lessons.Remove(lessonToRemove);
+            using(var db = Database.Instance.GetConnection())
+            {
+                foreach(Word word in CurrentLessonWords)
+                {
+                    RemoveWordIfExists(db, word);
+                }
+                RemoveLessonIfExists(db, lessonToRemove);
+            }
+        }
+
+        void CurrentLessonWords_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            CurrentLessonWordsChanged = true;
         }
 
         private bool CanSaveLesson()
         {
-            return CurrentEditingWord != null && !CurrentEditingWord.HasErrors && CurrentLessonWords.All<Word>((w) => !w.HasErrors) ;
+            return CurrentEditingWord != null && CurrentLesson != null &&
+                !CurrentEditingWord.HasErrors && CurrentLessonWords.All<Word>((w) => !w.HasErrors) &&
+                !String.IsNullOrWhiteSpace(CurrentLesson.FirstLangName) &&
+                !String.IsNullOrWhiteSpace(CurrentLesson.SecondLangName) &&
+                !CurrentLesson.HasErrors && CurrentLessonWords.Count() > 0;
         }
 
         private void SaveLesson()
         {
+            if (CurrentLessonWords.Count() == 0 || CurrentLessonWordsChanged == false)
+            {
+                return;
+            }
+
             using(var db = Database.Instance.GetConnection())
             {
+                RemoveLessonIfExists(db, CurrentLesson);
+                db.Insert(CurrentLesson);
+
+                CurrentLesson = db.Table<Lesson>().Where(l => l.Name == CurrentLesson.Name).First();
+
+                    
                 foreach (var word in CurrentLessonWords)
                 {
                     try
@@ -171,26 +193,36 @@ namespace Spanglish.ViewModels
 
         private bool CanAddNewWordToLesson()
         {
-
             return CurrentEditingWord != null &&  !String.IsNullOrWhiteSpace(CurrentEditingWord.FirstLangDefinition) &&
                 !String.IsNullOrWhiteSpace(CurrentEditingWord.SecondLangDefinition) &&
-                CurrentEditingWord.Level != null && !CurrentEditingWord.HasErrors && !HasErrors;
+                CurrentEditingWord.Level != null && !CurrentEditingWord.HasErrors && !String.IsNullOrWhiteSpace(CurrentLesson.FirstLangName) &&
+                !String.IsNullOrWhiteSpace(CurrentLesson.SecondLangName) && !CurrentLesson.HasErrors;
         }
 
         private void AddNewWordToLesson()
         {
-            CurrentLessonWords.Add(Word.CopyFrom(CurrentEditingWord));
-           
+            CurrentLessonWords.Add(Word.CopyFrom(CurrentEditingWord)); 
         }
 
         private void ShowLesson()
         {
             ShowModifyLessonSubView = true;
-            //SaveLessons(PreviousLesson);
             using (var db = Database.Instance.GetConnection())
             {
-                CurrentLesson = db.Table<Lesson>().Where(l => l.UserId == CurrentUser.Id && l.Name == CurrentLesson.Name).First();
+                var lessonsInDatabase = db.Table<Lesson>().Where(l => l.UserId == CurrentUser.Id && l.Name == CurrentLesson.Name);
+                if (lessonsInDatabase.Count() != 1)
+                {
+                    CurrentLessonWords.Clear();
+                    Lessons.Remove(CurrentLesson);
+                    CurrentLesson = null; 
+                    return;
+                }
+                CurrentLesson = lessonsInDatabase.First();
+
+
                 CurrentLessonWords = new ObservableCollection<Word>();
+                CurrentLessonWords.CollectionChanged += CurrentLessonWords_CollectionChanged;
+
                 foreach( var word in db.Table<Word>().Where(w => w.LessonId == CurrentLesson.Id))
                 {
                     CurrentLessonWords.Add(word);
@@ -209,22 +241,39 @@ namespace Spanglish.ViewModels
 
         private void StartAddingNewLesson()
         {
+            SaveLesson();
             CurrentLesson = new Lesson() { Name = NewLessonName, UserId = CurrentUser.Id };
-            Lessons.Add(CurrentLesson);
-
-            using (var db = Database.Instance.GetConnection())
-            {
-                db.Insert(CurrentLesson);
-            }
-
             OnPropertyChanged("CurrentLesson");
             CurrentLessonWords = new ObservableCollection<Word>();
+            CurrentLessonWords.CollectionChanged += CurrentLessonWords_CollectionChanged;
+            CurrentLessonWordsChanged = false;
             ShowModifyLessonSubView = true;
+            NewLessonName = "";
+            if (Lessons.Contains(CurrentLesson) == false)
+            {
+                Lessons.Add(CurrentLesson);
+            }
+        }
+
+        private void RemoveLessonIfExists(SQLiteConnection db,  Lesson lesson)
+        {
+            var lessonExistsInDB = db.Table<Lesson>().Where(l => l.Id == lesson.Id);
+            if (lessonExistsInDB.Count() == 1)
+            {
+                db.Delete<Lesson>(lessonExistsInDB.First().Id);
+            }
+        }
+
+        private void RemoveWordIfExists(SQLiteConnection db, Word word)
+        {
+            var wordExistsInDB = db.Table<Word>().Where(w => w.Id == word.Id);
+            if (wordExistsInDB.Count() == 1)
+            {
+                db.Delete<Word>(wordExistsInDB.First().Id);
+            }
         }
 
         private Word _currentEditingWord;
-        private string _lessonFirstLangDef;
-        private string _lessonSecondLangDef;
         private bool _showModifyLessonSubView;
 
         private string _newLessonName;

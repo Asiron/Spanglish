@@ -3,9 +3,169 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:util="clr-namespace:Spanglish.Util"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter  x:Key="boolToVisibility" />
+        <util:InvertedBoolToVisibilityConverter x:Key="invBoolToVisibility"/>
+
+        <Style TargetType="Border">
+            <Setter Property="BorderBrush" Value="Gainsboro"></Setter>
+            <Setter Property="BorderThickness" Value="1"></Setter>
+            <Setter Property="Background" Value="GhostWhite"></Setter>
+            <Setter Property="Margin" Value="10"></Setter>
+        </Style>
+
+        <!-- DataGrid Background -->
+        <LinearGradientBrush x:Key="BlueLightGradientBrush" StartPoint="0,0" EndPoint="0,1">
+            <GradientStop Offset="0" Color="#FFEAF3FF"/>
+            <GradientStop Offset="0.654" Color="#FFC0DEFF"/>
+            <GradientStop Offset="1" Color="#FFC0D9FB"/>
+        </LinearGradientBrush>
+
+        <!-- DatGrid style -->
+        <Style TargetType="{x:Type DataGrid}">
+            <Setter Property="Margin" Value="5" />
+            <Setter Property="Background" Value="{StaticResource BlueLightGradientBrush}" />
+            <Setter Property="BorderBrush" Value="#FFA6CCF2" />
+            <Setter Property="RowBackground" Value="White" />
+            <Setter Property="AlternatingRowBackground" Value="#FDFFD0" />
+            <Setter Property="HorizontalGridLinesBrush" Value="Transparent" />
+            <Setter Property="VerticalGridLinesBrush" Value="#FFD3D0" />
+            <Setter Property="RowHeaderWidth" Value="0" />
+        </Style>
+
+
+        <!-- Row Style-->
+        <Style x:Key="RowStyle" TargetType="{x:Type DataGridRow}">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="true">
+                    <Setter Property="BorderThickness" Value="1"/>
+                    <Setter Property="BorderBrush" Value="Red"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+    </UserControl.Resources>
+
     <Grid>
-            
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.55*"></RowDefinition>
+            <RowDefinition Height="0.55*"></RowDefinition>
+            <RowDefinition Height="6*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Text="Spanglish - Statistics" 
+                   FontWeight="Bold" FontSize="18"
+                   HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <TextBlock Grid.Row="1" Text="{Binding CurrentUser.Name, Mode=TwoWay}" 
+                   FontWeight="Bold" FontSize="18"
+                   HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <Border Grid.Row="2">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"></ColumnDefinition>
+                    <ColumnDefinition Width="5*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Border Grid.Column="0">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*"></RowDefinition>
+                            <RowDefinition Height="7*"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Text="Lessons" 
+                                FontWeight="Bold" FontSize="18"
+                                HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        <ListView Grid.Row="1" ItemsSource="{Binding Lessons}" SelectedItem="{Binding CurrentLesson}" >
+                            <ListView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Vertical"/>
+                                </ItemsPanelTemplate>
+                            </ListView.ItemsPanel>
+
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="2">
+                                        <TextBlock Grid.Row="1" Text="{Binding Name}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </Grid>
+                </Border>
+                <Border Grid.Column="1">
+                    <DataGrid  Name="MainGrid" 
+                            RowStyle="{StaticResource RowStyle}"    
+                            ItemsSource="{Binding CurrentLessonHistory}" 
+                            SelectedItem="{Binding SelectedLessonHistoryEntry}"
+                            AutoGenerateColumns="False" 
+                            DockPanel.Dock="Top"
+                        >
+
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="First language name" Width="3*" IsReadOnly="True">
+                                <DataGridTextColumn.HeaderTemplate>
+                                    <DataTemplate>
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding Content, RelativeSource={RelativeSource Mode=TemplatedParent}}" Margin="5"/>
+                                            <TextBox IsReadOnly="True" BorderBrush="Green" BorderThickness="1" Margin="5" Text="{Binding 
+                                                    RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}},
+                                                    Path=DataContext.CurrentLesson.FirstLangName}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTextColumn.HeaderTemplate>
+                                <DataGridTextColumn.Binding>
+                                    <Binding Path="FirstLangDefinition">
+                                    </Binding>
+                                </DataGridTextColumn.Binding>
+                            </DataGridTextColumn>
+
+                            <DataGridTextColumn Header="Second language name" Width="3*" IsReadOnly="True">
+                                <DataGridTextColumn.HeaderTemplate>
+                                    <DataTemplate>
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding Content, RelativeSource={RelativeSource Mode=TemplatedParent}}" Margin="5"/>
+                                            <TextBox  IsReadOnly="True" BorderBrush="Green" BorderThickness="1" Margin="5" Text="{Binding 
+                                                    RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}},
+                                                    Path=DataContext.CurrentLesson.SecondLangName}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTextColumn.HeaderTemplate>
+                                <DataGridTextColumn.Binding>
+                                    <Binding Path="SecondLangDefinition"/>
+                                </DataGridTextColumn.Binding>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Level" Width="1.5*" IsReadOnly="True">
+                                <DataGridTextColumn.Binding>
+                                    <Binding Path="Level"/>
+                                </DataGridTextColumn.Binding>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="C" Width="0.5*" IsReadOnly="True">
+                                <DataGridTextColumn.Binding>
+                                    <Binding Path="Level"/>
+                                </DataGridTextColumn.Binding>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="W" Width="0.5*" IsReadOnly="True">
+                                <DataGridTextColumn.Binding>
+                                    <Binding Path="Level"/>
+                                </DataGridTextColumn.Binding>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="S" Width="0.5*" IsReadOnly="True">
+                                <DataGridTextColumn.Binding>
+                                    <Binding Path="Level"/>
+                                </DataGridTextColumn.Binding>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Last Correct" Width="2.5*" IsReadOnly="True">
+                                <DataGridTextColumn.Binding>
+                                    <Binding Path="Level"/>
+                                </DataGridTextColumn.Binding>
+                            </DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Border>
+            </Grid>
+        </Border>
+        <Button Margin="10"  Grid.Row="3" Content="Back to Main Menu" Command="{Binding RevertToPreviousViewModelCmd}"/>
     </Grid>
 </UserControl>

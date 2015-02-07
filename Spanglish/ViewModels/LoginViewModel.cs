@@ -41,8 +41,6 @@ namespace Spanglish.ViewModels
             }
         }
 
-        private ValidationPredicate _validateLoginService;
-        private ValidationPredicate _validatePasswordService;
 
         public LoginViewModel()
         {
@@ -94,6 +92,9 @@ namespace Spanglish.ViewModels
             }
             return authUser; 
         }
+
+        private ValidationPredicate _validateLoginService;
+        private ValidationPredicate _validatePasswordService;
 
     }
 }
