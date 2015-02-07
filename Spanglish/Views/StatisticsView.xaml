@@ -77,7 +77,10 @@
                         <TextBlock Grid.Row="0" Text="Lessons" 
                                 FontWeight="Bold" FontSize="18"
                                 HorizontalAlignment="Center" VerticalAlignment="Center" />
-                        <ListView Grid.Row="1" ItemsSource="{Binding Lessons}" SelectedItem="{Binding CurrentLesson}" >
+                        <ListView Grid.Row="1" 
+                                  ItemsSource="{Binding Lessons}" 
+                                  SelectedItem="{Binding CurrentLesson}"
+                                  SelectedIndex="{Binding CurrentLessonIndex}">
                             <ListView.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <StackPanel Orientation="Vertical"/>
@@ -143,22 +146,22 @@
                             </DataGridTextColumn>
                             <DataGridTextColumn Header="C" Width="0.5*" IsReadOnly="True">
                                 <DataGridTextColumn.Binding>
-                                    <Binding Path="Level"/>
+                                    <Binding Path="Correct"/>
                                 </DataGridTextColumn.Binding>
                             </DataGridTextColumn>
                             <DataGridTextColumn Header="W" Width="0.5*" IsReadOnly="True">
                                 <DataGridTextColumn.Binding>
-                                    <Binding Path="Level"/>
+                                    <Binding Path="Wrong"/>
                                 </DataGridTextColumn.Binding>
                             </DataGridTextColumn>
                             <DataGridTextColumn Header="S" Width="0.5*" IsReadOnly="True">
                                 <DataGridTextColumn.Binding>
-                                    <Binding Path="Level"/>
+                                    <Binding Path="Skipped"/>
                                 </DataGridTextColumn.Binding>
                             </DataGridTextColumn>
                             <DataGridTextColumn Header="Last Correct" Width="2.5*" IsReadOnly="True">
                                 <DataGridTextColumn.Binding>
-                                    <Binding Path="Level"/>
+                                    <Binding Path="LastTimeCorrectStringified"/>
                                 </DataGridTextColumn.Binding>
                             </DataGridTextColumn>
                         </DataGrid.Columns>

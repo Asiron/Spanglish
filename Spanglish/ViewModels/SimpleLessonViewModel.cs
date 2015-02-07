@@ -37,20 +37,26 @@ namespace Spanglish.ViewModels
 
         protected override void PrepareWord()
         {
-            CurrentWordsToChoose.Clear();
             Random rnd = new Random();
+            List<Word> newWordList = new List<Word>();
             foreach (var word in LessonWordsAll.OrderBy(x => rnd.Next()).Take(5))
             {
-                CurrentWordsToChoose.Add(Word.CopyFrom(word));
+                newWordList.Add(Word.CopyFrom(word));
             }
             if (LessonWords.Count > 0)
             {
-                CurrentWord = Word.CopyFrom(LessonWords[0]);
-                LessonWords.RemoveAt(0);
-                if (!CurrentWordsToChoose.Contains(CurrentWord))
+                int index = rnd.Next(LessonWords.Count());
+                CurrentWord = Word.CopyFrom(LessonWords[index]);
+                LessonWords.RemoveAt(index);
+                if (!newWordList.Contains(CurrentWord))
                 {
-                    CurrentWordsToChoose.Add(CurrentWord);
+                    newWordList.Add(CurrentWord);
                 }
+            }
+            CurrentWordsToChoose.Clear();
+            foreach (Word w in newWordList.OrderBy(item => rnd.Next())) 
+            {
+                CurrentWordsToChoose.Add(w);
             }
         }
     }

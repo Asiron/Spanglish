@@ -12,6 +12,22 @@ namespace Spanglish.Models
         private int _correct = 0;
         private int _errors  = 0;
         private int _skipped = 0;
+        private History historyEntry;
+
+        public History(History historyEntry)
+        {
+            Id = historyEntry.Id;
+            UserId = historyEntry.UserId;
+            WordId = historyEntry.WordId;
+            Correct = historyEntry.Correct;
+            LastTimeCorrect = historyEntry.LastTimeCorrect;
+            Wrong = historyEntry.Wrong;
+            Skipped = historyEntry.Skipped;
+        }
+
+        public History()
+        {
+        }
 
 
         [PrimaryKey, AutoIncrement]

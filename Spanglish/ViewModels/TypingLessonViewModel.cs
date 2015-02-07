@@ -44,8 +44,10 @@ namespace Spanglish.ViewModels
             CurrentWordToEdit = "";
             if (LessonWords.Count > 0)
             {
-                CurrentWord = Word.CopyFrom(LessonWords[0]);
-                LessonWords.RemoveAt(0);
+                Random rnd = new Random();
+                int index = rnd.Next(LessonWords.Count());
+                CurrentWord = Word.CopyFrom(LessonWords[index]);
+                LessonWords.RemoveAt(index);
 
             }
         }
