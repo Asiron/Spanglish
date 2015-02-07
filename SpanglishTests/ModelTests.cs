@@ -26,7 +26,6 @@ namespace SpanglishTests
             {
                 Assert.AreEqual(0, db.Table<User>().Count());
                 Assert.AreEqual(0, db.Table<Lesson>().Count());
-                //Assert.AreEqual(0, db.Table<Database.Word>().Count());
             }
         }
 
@@ -88,8 +87,6 @@ namespace SpanglishTests
                 {
                     StringAssert.Contains(e.Message, "NOT NULL");
                 }
-
-
             }
         }
 
@@ -99,10 +96,10 @@ namespace SpanglishTests
             Database d = new Database(_pathToDatabase);
             using (var db = new SQLiteConnection(new SQLitePlatformWin32(), d.Filename))
             {
-                db.Insert(new Lesson() { Name = "aaaa", UserId = 1 });
+                db.Insert(new Lesson() { Name = "aaaa", UserId = 1, FirstLangName = "aa", SecondLangName= "bb" });
                 try
                 {
-                    db.Insert(new Lesson() { Name = "aaaa", UserId = 1});
+                    db.Insert(new Lesson() { Name = "aaaa", UserId = 1, FirstLangName = "aa", SecondLangName = "bb" });
                     Assert.Fail("Unique name constraint should appear");
                 } 
                 catch (SQLiteException e)
@@ -111,7 +108,25 @@ namespace SpanglishTests
                 }
                 try
                 {
-                    db.Insert(new Lesson() { Name = "asdasdasdasd"});
+                    db.Insert(new Lesson() { Name = "asdasdasdasd", FirstLangName = "aa", SecondLangName = "bb" });
+                    Assert.Fail("NOTNULL user id constraint should appear");
+                }
+                catch (SQLiteException e)
+                {
+                    StringAssert.Contains(e.Message, "NOT NULL");
+                }
+                try
+                {
+                    db.Insert(new Lesson() { Name = "aaaa", UserId = 1, FirstLangName = "aa" });
+                    Assert.Fail("NOTNULL user id constraint should appear");
+                }
+                catch (SQLiteException e)
+                {
+                    StringAssert.Contains(e.Message, "NOT NULL");
+                }
+                try
+                {
+                    db.Insert(new Lesson() { Name = "aaaa", UserId = 1, SecondLangName = "bb" });
                     Assert.Fail("NOTNULL user id constraint should appear");
                 }
                 catch (SQLiteException e)
@@ -129,8 +144,6 @@ namespace SpanglishTests
             {
                 Lesson l = new Lesson() { Name = "vehicles" };
 
-
-                // Level null
                 try
                 {
                     db.Insert(new Word()
@@ -146,7 +159,6 @@ namespace SpanglishTests
                     StringAssert.Contains(e.Message, "NOT NULL constraint failed: Word.Level");
                 }
 
-                // Lesson null
                 try
                 {
                     db.Insert(new Word()
@@ -166,7 +178,6 @@ namespace SpanglishTests
                 { 
                     FirstLangDefinition = "a house",
                     SecondLangDefinition = "la casa", 
-                    ImagePath = null,
                     Level = 0, 
                     LessonId = l.Id
                 });
@@ -188,8 +199,7 @@ namespace SpanglishTests
                     FirstLangDefinition = "mouth",
                     SecondLangDefinition = "la boca",
                     LessonId = l.Id,
-                    Level = 0,
-                    ImagePath = null
+                    Level = 0
                 };
                 History h = new History()
                 {
