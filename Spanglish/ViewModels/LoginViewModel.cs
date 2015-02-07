@@ -9,15 +9,15 @@ using System.Threading.Tasks;
 
 namespace Spanglish.ViewModels
 {
+    /*
+     * Handles login, upon correct credentials, Log in button should be activated and 
+     * validation error's red frame should disappera
+     */
     class LoginViewModel : ValidableObject, IBaseViewModel
     {
-        public RelayCommand LoginCmd { get; set; }
-        public RelayCommand CreateNewAccountCmd { get; set; }
-        public RelayCommand SetCreateAccountViewCmd { get; set;}
-
-
-        private string _login;
-        private string _password;
+        public RelayCommand LoginCmd { get; private set; }
+        public RelayCommand CreateNewAccountCmd { get; private set; }
+        public RelayCommand SetCreateAccountViewCmd { get; private set;}
 
         public string CorrectCredentials {set; get;}
 
@@ -40,7 +40,6 @@ namespace Spanglish.ViewModels
                 ValidateProperty("CorrectCredentials", _password, _validatePasswordService);
             }
         }
-
 
         public LoginViewModel()
         {
@@ -95,6 +94,9 @@ namespace Spanglish.ViewModels
 
         private ValidationPredicate _validateLoginService;
         private ValidationPredicate _validatePasswordService;
+
+        private string _login;
+        private string _password;
 
     }
 }

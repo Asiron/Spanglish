@@ -8,9 +8,11 @@ using System.Threading.Tasks;
 
 namespace Spanglish.ViewModels
 {
+    /*
+     * Typing lesson - type in the correct translation of the given word
+     */ 
     class TypingLessonViewModel : LessonViewModel
     {
-        private string _currentWordToEdit;
         public string CurrentWordToEdit
         {
             get { return _currentWordToEdit; }
@@ -51,5 +53,7 @@ namespace Spanglish.ViewModels
 
             }
         }
+
+        private string _currentWordToEdit;
     }
 }

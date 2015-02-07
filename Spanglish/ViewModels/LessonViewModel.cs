@@ -12,20 +12,25 @@ using SQLite.Net;
 
 namespace Spanglish.ViewModels
 {
+    /*
+     * Base class for implementing different Lesson types
+     * It provides lesson selection, view with current results,
+     * and shows with which languages you're dealing with.
+     * It leaves space for implementing your own method of choosing correct word
+     * It can be e.g. choose from n different words, or type in the correct word.
+     */
     public class LessonViewModel : ValidableObject, IBaseViewModel
     {
-        public User CurrentUser { get; private set; }
         public RelayCommand RevertToPreviousViewModelCmd { get; private set; }
         public RelayCommand StartStopSimpleLessonCmd { get; private set; }
         public RelayCommand AcceptCurrentWordCmd { get; private set; }
         public RelayCommand SkipCurrentWordCmd { get; private set; }
 
+        public User CurrentUser { get; private set; }
+
         public int CorrectAnswers 
         { 
-            get
-            {
-                return _correctAnswers;
-            }
+            get { return _correctAnswers; }
             private set
             {
                 _correctAnswers = value;
@@ -64,18 +69,12 @@ namespace Spanglish.ViewModels
         }
         public int TotalAnswers
         {
-            get
-            {
-                return CorrectAnswers + WrongAnswers + SkippedAnswers;
-            }
+            get { return CorrectAnswers + WrongAnswers + SkippedAnswers; }
         }
 
         public int LeftAnswers
         {
-            get
-            {
-                return LessonWordsAll.Count - TotalAnswers;
-            }
+            get { return LessonWordsAll.Count - TotalAnswers; }
         }
 
         public String TimeElapsed
@@ -84,7 +83,7 @@ namespace Spanglish.ViewModels
             private set { _timeElapsed = value; OnPropertyChanged("TimeElapsed"); }
         } 
 
-        private string _lessonFinishedText;
+
         public string LessonFinishedText { 
             get { return _lessonFinishedText; } 
             set { _lessonFinishedText = value; OnPropertyChanged("LessonFinishedText"); }
@@ -93,12 +92,12 @@ namespace Spanglish.ViewModels
         public string StartStopButtonText
         {
             get { return _startStopButtonText; }
-            set { _startStopButtonText = value; OnPropertyChanged("StartStopButtonText"); }
+            private set { _startStopButtonText = value; OnPropertyChanged("StartStopButtonText"); }
         }
 
-        public bool IsLessonRunning { get; set; }
+        public bool IsLessonRunning { get; private set; }
 
-        public DispatcherTimer LessonDispatcherTimer { get; set; }
+        public DispatcherTimer LessonDispatcherTimer { get; private set; }
 
         public DateTime LessonStartingTime { set; private get; }
 
@@ -127,11 +126,7 @@ namespace Spanglish.ViewModels
                     return "Current lesson - " + CurrentLesson.Name;
                 }
             }
-            set
-            {
-                _lessonTitle = value;
-                OnPropertyChanged("LessonTitle");
-            }
+            set { _lessonTitle = value; OnPropertyChanged("LessonTitle"); }
         }
 
         public bool ShowLessonPanel
@@ -145,7 +140,6 @@ namespace Spanglish.ViewModels
             get { return _showResultPanel; }
             set { _showResultPanel = value; OnPropertyChanged("ShowResultPanel"); }
         }
-
 
         public ObservableCollection<Word> LessonWords { set; get; }
         public ObservableCollection<Word> LessonWordsAll { set; get; }
@@ -302,13 +296,10 @@ namespace Spanglish.ViewModels
                     var fetchedHistory = db.Table<History>().Where(h => h.UserId == CurrentUser.Id && h.WordId == w.Id);
                     History wordHistory = null;
                     if (fetchedHistory.Count() == 0) {
-                        Console.WriteLine("Word not found in history");
                         wordHistory = new History() {UserId = CurrentUser.Id, WordId = w.Id};
-                    } else {
-                        Console.WriteLine("Word found in history");
+                    } else
+                    {
                         wordHistory = fetchedHistory.First();
-                        Console.WriteLine(String.Format("{0} {1} {2} {3}", w.FirstLangDefinition, wordHistory.Correct, wordHistory.Wrong, wordHistory.Skipped));
-
                     }
                     CurrentUserLessonHistory[w] = wordHistory;
                 }
@@ -321,7 +312,6 @@ namespace Spanglish.ViewModels
 
         protected virtual void PrepareWord()
         {
-
         }
 
         private void StopActualLesson()
@@ -347,6 +337,7 @@ namespace Spanglish.ViewModels
             OnPropertyChanged("LessonTitle");
         }
 
+        private string _lessonFinishedText;
         private string _startStopButtonText;
         private ObservableCollection<Lesson> _lessons;
         private  Lesson _currentLesson;

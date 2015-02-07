@@ -8,16 +8,18 @@ using System.Threading.Tasks;
 
 namespace Spanglish.ViewModels
 {
+    /*
+     * Simple lesson - choose a correct word translation from n given words in combobox
+     */ 
     public class SimpleLessonViewModel : LessonViewModel
     {
-        private Word _currentSelectedWord;
         public Word CurrentSelectedWord
         {
             get { return _currentSelectedWord; }
             set { _currentSelectedWord = value; OnPropertyChanged("CurrentSelectedWord"); }
         }
 
-        public ObservableCollection<Word> CurrentWordsToChoose { set; get; }
+        public ObservableCollection<Word> CurrentWordsToChoose { get; private set; }
 
 
         public SimpleLessonViewModel(User currentUser) : base(currentUser)
@@ -59,5 +61,8 @@ namespace Spanglish.ViewModels
                 CurrentWordsToChoose.Add(w);
             }
         }
+
+        private Word _currentSelectedWord;
+
     }
 }

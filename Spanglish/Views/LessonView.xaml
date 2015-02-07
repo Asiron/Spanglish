@@ -68,10 +68,8 @@
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
                             </ListView>
-                                <Button Grid.Row="2" IsDefault="False" Focusable="False" Content="{Binding StartStopButtonText}" Command="{Binding StartStopSimpleLessonCmd}">
-
-                            </Button>
-                        </Grid>
+                            <Button Grid.Row="2" IsDefault="False" Focusable="False" Content="{Binding StartStopButtonText}" Command="{Binding StartStopSimpleLessonCmd}"/>
+                            </Grid>
                     </Border>
                     <Border Grid.Column="1" Visibility="{Binding ShowLessonPanel, Mode=TwoWay, Converter={StaticResource boolToVisibility}}">
                         <Grid >

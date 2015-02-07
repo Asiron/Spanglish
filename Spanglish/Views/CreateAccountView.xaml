@@ -5,22 +5,41 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:misc="clr-namespace:Spanglish.Util"
              mc:Ignorable="d" 
-             
              d:DesignHeight="600" d:DesignWidth="800">
-    <Grid >
-        
+    <UserControl.Resources>
+        <!-- Validation error tooltips for TextBoxes-->
+        <Style TargetType="{x:Type TextBox}">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="true">
+                    <Setter Property="ToolTip"
+                            Value="{Binding RelativeSource={x:Static RelativeSource.Self},
+                            Path=(Validation.Errors)[0].ErrorContent}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <!-- Validation error tooltips for PasswordBoxes-->
+        <Style TargetType="{x:Type PasswordBox}">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="true">
+                    <Setter Property="ToolTip"
+                            Value="{Binding RelativeSource={x:Static RelativeSource.Self},
+                            Path=(Validation.Errors)[0].ErrorContent}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+    
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="0.5*"></RowDefinition>
             <RowDefinition Height="2*"></RowDefinition>
             <RowDefinition Height="0.5*"></RowDefinition>
-
         </Grid.RowDefinitions>
         
         <TextBlock Grid.Row="0" Text="Create new account" 
                    FontWeight="Bold" FontSize="18"
                    HorizontalAlignment="Center" VerticalAlignment="Center" />
-        <Border Margin="3" Grid.Row="1" Background="GhostWhite" BorderBrush="Gainsboro" BorderThickness="1" >
-
+        <Border Margin="10" Grid.Row="1" Background="GhostWhite" BorderBrush="Gainsboro" BorderThickness="1" >
             <Grid Grid.Row="1" >      
             <Grid.RowDefinitions>
                 <RowDefinition Height="1*"></RowDefinition>
@@ -85,40 +104,34 @@
                     </Validation.ErrorTemplate>
                 </PasswordBox>
             </StackPanel>
-            <StackPanel Grid.Row="3" Margin="10">
-                <Label Name="LabelEnterPasswordAgain" Content="Confirm Password:" HorizontalAlignment="Center"></Label>
-                <PasswordBox Name="TbEnterPasswordAgain" HorizontalContentAlignment="Center" misc:PasswordBoxAssistant.BindPassword="true" misc:PasswordBoxAssistant.BoundPassword="{Binding Path=NewPasswordConfirmation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}">
-                    <Validation.ErrorTemplate>
-                        <ControlTemplate>
-                            <StackPanel>
-                                <AdornedElementPlaceholder x:Name="textBox"/>
-                                <ItemsControl ItemsSource="{Binding}">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <TextBlock HorizontalAlignment="Center" Text="{Binding ErrorContent}" Foreground="Red"/>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </StackPanel>
-                        </ControlTemplate>
-                    </Validation.ErrorTemplate>
-                </PasswordBox>  
-            </StackPanel>
-          
-
-        </Grid >
+                <StackPanel Grid.Row="3" Margin="10">
+                    <Label Name="LabelEnterPasswordAgain" Content="Confirm Password:" HorizontalAlignment="Center"></Label>
+                    <PasswordBox Name="TbEnterPasswordAgain" HorizontalContentAlignment="Center" misc:PasswordBoxAssistant.BindPassword="true" misc:PasswordBoxAssistant.BoundPassword="{Binding Path=NewPasswordConfirmation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}">
+                        <Validation.ErrorTemplate>
+                            <ControlTemplate>
+                                <StackPanel>
+                                    <AdornedElementPlaceholder x:Name="textBox"/>
+                                    <ItemsControl ItemsSource="{Binding}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock HorizontalAlignment="Center" Text="{Binding ErrorContent}" Foreground="Red"/>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </ControlTemplate>
+                        </Validation.ErrorTemplate>
+                    </PasswordBox>
+                </StackPanel>
+            </Grid >
         </Border>
         <Grid Grid.Row="2" >
-            
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="3*"></ColumnDefinition>
                 <ColumnDefinition Width="1*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            
             <Button Grid.Column="0" IsDefault="True" Content="Create new account" Command="{Binding CreateNewAccountCmd}"></Button>
             <Button Grid.Column="1" IsCancel="True" Content="Back" Command="{Binding RevertToPreviousViewModelCmd}"></Button>
-
         </Grid>
-
     </Grid>
 </UserControl>

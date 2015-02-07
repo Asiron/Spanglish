@@ -12,21 +12,26 @@ using Spanglish.Validators;
 
 namespace Spanglish.ViewModels
 {
+    /*
+     * Allows for creation of new lessons for current user as well as
+     * modification of selected lesson
+     * 
+     */
     class CreateNewLessonsViewModel : ValidableObject, IBaseViewModel
     {
-        public RelayCommand RevertToPreviousViewModelCmd { set; get; }
-        public RelayCommand AddNewLessonCmd { set; get; }
-        public RelayCommand DeleteSelectedWordCmd { set; get; }
-        public RelayCommand ShowLessonCmd { set; get; }
-        public RelayCommand AddNewWordToLessonCmd { set; get; }
-        public RelayCommand SaveLessonCmd { set; get; }
-        public RelayCommand DeleteSelectedLessonCmd { set; get; }
-        public User CurrentUser { set; get; }
+        public RelayCommand RevertToPreviousViewModelCmd { get; private set; }
+        public RelayCommand AddNewLessonCmd { get; private set; }
+        public RelayCommand DeleteSelectedWordCmd { get; private set; }
+        public RelayCommand ShowLessonCmd { get; private set; }
+        public RelayCommand AddNewWordToLessonCmd { get; private set; }
+        public RelayCommand SaveLessonCmd { get; private set; }
+        public RelayCommand DeleteSelectedLessonCmd { get; private set; }
+        public User CurrentUser { get; private set; }
 
         public bool ShowModifyLessonSubView
         {
             get { return _showModifyLessonSubView; }
-            set
+            private set
             {
                 _showModifyLessonSubView = value;
                 OnPropertyChanged("ShowModifyLessonSubView");
@@ -34,14 +39,15 @@ namespace Spanglish.ViewModels
         }
 
         public string NewLessonName
-        { 
+        {
+            get { return _newLessonName; }
             set
             {
                 _newLessonName = value;
                 OnPropertyChanged("NewLessonName");
                 ValidateProperty("NewLessonName", _newLessonName, _newLessonValidationService);
             }
-            get { return _newLessonName; }
+
         }
 
         public Lesson CurrentLesson
@@ -53,8 +59,6 @@ namespace Spanglish.ViewModels
                 OnPropertyChanged("CurrentLesson");
             }
         }
-        public ObservableCollection<Lesson> Lessons { set; get; }
-        public bool CurrentLessonWordsChanged { get; set; }
 
         public ObservableCollection<Word> CurrentLessonWords
         {
@@ -75,6 +79,9 @@ namespace Spanglish.ViewModels
                 OnPropertyChanged("CurrentEditingWord");
             }
         }
+
+        public ObservableCollection<Lesson> Lessons { get; private set; }
+        public bool CurrentLessonWordsChanged { get; private set; }
 
         public CreateNewLessonsViewModel(User currentUser)
         {
@@ -106,10 +113,14 @@ namespace Spanglish.ViewModels
                     count = db.Table<Lesson>().Where(l => l.UserId == currentUser.Id && l.Name.Equals(p)).Count();
                 }
                 if (count >= 1 || (CurrentLesson != null && CurrentLesson.Name.Equals(p as string)))
+                {
                     ret.Add("Lesson name has to be unique");
+                }
                 else if ((p as string).Length < Constants.MinLessonNameLength ||
                     (p as string).Length > Constants.MaxLessonNameLength)
+                { 
                     ret.Add(String.Format("Length has to be between {0} and {1}", Constants.MinLessonNameLength, Constants.MaxLessonNameLength));
+                }
 
                 return ret;
             };
@@ -141,7 +152,7 @@ namespace Spanglish.ViewModels
             }
         }
 
-        void CurrentLessonWords_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private void CurrentLessonWords_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             CurrentLessonWordsChanged = true;
         }
@@ -178,7 +189,8 @@ namespace Spanglish.ViewModels
                     }
                     catch (SQLiteException e)
                     {
-                        Console.WriteLine(e.Message + " LOL");
+                        Console.WriteLine(e.Message + " Couldn't delete for some reason");
+                        return;
                     }
                     db.Insert(new Word()
                     {

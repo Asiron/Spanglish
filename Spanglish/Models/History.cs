@@ -114,7 +114,7 @@ namespace Spanglish.Models
         public float Accuracy
         {
             get {
-                return Correct / (float)(Total);
+                return Correct * 100 / (float)(Total);
             }
         }
 

@@ -9,12 +9,17 @@ using System.Collections.ObjectModel;
 
 namespace Spanglish.ViewModels
 {
+    /*
+     * View Model that shows statistics about seleceted lesson
+     * Correct / Wrong and Skipped answers are shown as well as last timestamp of 
+     * correctly guessing the password
+     * 
+     */
     class StatisticsViewModel : ValidableObject, IBaseViewModel
     {
         public User CurrentUser { get; private set; }
 
         public RelayCommand RevertToPreviousViewModelCmd { get; private set; }
-
 
         public ObservableCollection<Lesson> Lessons { get; private set; }
 
@@ -75,15 +80,16 @@ namespace Spanglish.ViewModels
             }
         }
 
-        private Lesson _currentLesson;
-        private int _currentLessonIndex;
-
+        /*
+         *  Simple aggregate class for easy binding history to datagrid
+         *  Word has to be retrieved from database, because history only holds it's id.
+         */
         public class FetchedHistoryEntry : History
         {
             public FetchedHistoryEntry(History historyEntry)
                 : base(historyEntry)
             {
-               
+    
             }
 
             public void AddWord(Word corelatedWord)
@@ -110,6 +116,10 @@ namespace Spanglish.ViewModels
                 }
             }
         }
+
+        private Lesson _currentLesson;
+        private int _currentLessonIndex;
+
 
     }
 }

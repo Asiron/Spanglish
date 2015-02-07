@@ -8,19 +8,29 @@ using System.Threading.Tasks;
 
 namespace Spanglish.ViewModels
 {
+    /*
+     * Main Menu View Model accessible after logining in.
+     * Gives access to
+     *      - lesson creation/modifcation
+     *      - simple lesson - choose from (n) words
+     *      - typing lesson - type the correct word
+     *      - statistics panel - that shows your answers statistics
+     *      - log out button
+     */
     class MainMenuViewModel : ValidableObject, IBaseViewModel
     {
+        public RelayCommand RevertToPreviousViewModelCmd { get; private set; }
+        public RelayCommand SetCreateNewLessonsViewCmd { set; private get; }
+        public RelayCommand SetSimpleLessonViewCmd { set; private get; }
+        public RelayCommand SetTypingLessonViewCmd { set; private get; }
+        public RelayCommand SetStatisticsViewCmd { set; private get; }
+
         public User CurrentUser { get; private set; }
+
         public string UserWelcomeText
         {
             get { return "Welcome " + CurrentUser.Name; }
         }
-
-        public RelayCommand RevertToPreviousViewModelCmd { get; set; }
-        public RelayCommand SetCreateNewLessonsViewCmd { set; get; }
-        public RelayCommand SetSimpleLessonViewCmd { set; get; }
-        public RelayCommand SetTypingLessonViewCmd { set; get; }
-        public RelayCommand SetStatisticsViewCmd { set; get; }
 
         public MainMenuViewModel(User currentUser)
         {

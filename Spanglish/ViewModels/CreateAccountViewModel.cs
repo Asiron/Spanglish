@@ -11,22 +11,15 @@ using System.Threading.Tasks;
 
 namespace Spanglish.ViewModels
 {
+
+    /* 
+     * Creates new account for the user from the given data 
+     * and validates the fields before accepting them.
+     */
     class CreateAccountViewModel : ValidableObject, IBaseViewModel
     {
-        public string Name
-        {
-            get { return "Create new account screen"; }
-        }
-
-        private readonly IValidateString _loginValidatorService;
-        private readonly IValidateString _passwordValidatorService;
-        private readonly IValidateString _nameValidatorService;
-
-
-        private string _newLogin;
-        private string _newName;
-        private string _newPassword;
-        private string _newPasswordConfirmation;
+        public RelayCommand CreateNewAccountCmd { get; private set; }
+        public RelayCommand RevertToPreviousViewModelCmd { get; private set; }
 
         public string NewLogin
         {
@@ -69,8 +62,6 @@ namespace Spanglish.ViewModels
             }
         }
 
-        public RelayCommand CreateNewAccountCmd { get; set;}
-        public RelayCommand RevertToPreviousViewModelCmd { get; set; }
 
         public CreateAccountViewModel()
         {
@@ -98,5 +89,14 @@ namespace Spanglish.ViewModels
                 !String.IsNullOrWhiteSpace(NewPasswordConfirmation) &&
                 !String.IsNullOrWhiteSpace(NewName) && !HasErrors;
         }
+
+        private readonly IValidateString _loginValidatorService;
+        private readonly IValidateString _passwordValidatorService;
+        private readonly IValidateString _nameValidatorService;
+
+        private string _newLogin;
+        private string _newName;
+        private string _newPassword;
+        private string _newPasswordConfirmation;
     }
 }

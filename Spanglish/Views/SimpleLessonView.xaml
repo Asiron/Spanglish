@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:v="clr-namespace:Spanglish.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="300">    
     <v:LessonView>
         <ComboBox Margin="10" ItemsSource="{Binding CurrentWordsToChoose}" SelectedItem="{Binding CurrentSelectedWord}">
             <ComboBox.ItemTemplate>

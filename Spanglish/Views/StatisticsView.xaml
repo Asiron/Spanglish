@@ -144,6 +144,11 @@
                                     <Binding Path="Level"/>
                                 </DataGridTextColumn.Binding>
                             </DataGridTextColumn>
+                            <DataGridTextColumn Header="Accuracy" Width="1.5*" IsReadOnly="True">
+                                <DataGridTextColumn.Binding>
+                                    <Binding Path="Accuracy"/>
+                                </DataGridTextColumn.Binding>
+                            </DataGridTextColumn>
                             <DataGridTextColumn Header="C" Width="0.5*" IsReadOnly="True">
                                 <DataGridTextColumn.Binding>
                                     <Binding Path="Correct"/>

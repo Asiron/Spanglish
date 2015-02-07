@@ -10,6 +10,7 @@
              >
     
     <UserControl.Resources>
+        
         <BooleanToVisibilityConverter  x:Key="boolToVisibility" />
         <Style TargetType="Border">
             <Setter Property="BorderBrush" Value="Gainsboro"></Setter>
@@ -48,6 +49,7 @@
             </Style.Triggers>
         </Style>
 
+        <!-- Validation error tooltips for TextBoxes-->
         <Style TargetType="{x:Type TextBox}">
             <Style.Triggers>
                 <Trigger Property="Validation.HasError" Value="true">
